@@ -27,16 +27,20 @@
 #include <fstream>
 #include <filesystem>
 
-
 using json = nlohmann::json;
 namespace fs = std::filesystem;
 
-GroupManager::GroupManager(const std::string& filepath) {
+
+GroupManager::GroupManager(
+        const std::string& filepath, 
+        const std::string& outputPreamble) {
 
     this->filepath = filepath;
+    this->outputPreamble = outputPreamble;
     checkDataDirectory();
     loadGroupData();
 }
+
 
 const std::vector<std::unique_ptr<Group>>& GroupManager::getGroups() const {
     return groups;
@@ -90,10 +94,14 @@ void GroupManager::checkDataDirectory() {
     try {
         bool dataCreated = fs::create_directories(filepath);
         if (dataCreated) {
-            std::cout << "Directory created: " << filepath << std::endl;
+            std::cout << outputPreamble
+                      << "Directory created: " 
+                      << filepath 
+                      << std::endl;
         }
     } catch (const fs::filesystem_error& e) {
-        std::cerr << "ERROR when creating directory \"" 
+        std::cerr << outputPreamble
+                  << "ERROR when creating directory \"" 
                   << filepath 
                   << "\": " << e.what() 
                   << std::endl;
@@ -102,26 +110,26 @@ void GroupManager::checkDataDirectory() {
     try {
         bool tasksCreated = fs::create_directories(filepath + "tasks/");
         if (tasksCreated) {
-            std::cout << "Directory created: " << filepath << "tasks/" << std::endl;
+            std::cout << outputPreamble
+                      << "Directory created: " 
+                      << filepath 
+                      << "tasks/" 
+                      << std::endl;
         }
     } catch (const fs::filesystem_error& e) {
-        std::cerr << "ERROR when creating directory \""
+        std::cerr << outputPreamble
+                  << "ERROR when creating directory \""
                   << filepath
                   << "/tasks\": " << e.what()
                   << std::endl;
     }
 }
 
-
 void GroupManager::loadGroupData() {
-    std::cout << "Loading JSON group data file..." << std::endl;
     std::ifstream file(filepath + "groupData.json");
     if (file.is_open()) {
         this->data = json::parse(file);
-        std::cout << "Loaded JSON group data file" << std::endl;
     } else {
-        std::cerr << "ERROR when trying to read groupData.json file"
-                  << std::endl;
         return;
     }
     file.close();
@@ -134,23 +142,10 @@ void GroupManager::loadGroupData() {
                 + idStr
                 + "_tasks.json";
         
-        std::cout << "Loading JSON group " 
-                  << idStr 
-                  << " file..." 
-                  << std::endl;
         std::ifstream taskfileStream(filename);
         json taskfile;
         if (taskfileStream.is_open()) {
             taskfile = json::parse(taskfileStream);
-            std::cout << "Loaded JSON \"group"
-                      << idStr
-                      << "_tasks\" data file" 
-                      << std::endl;
-        } else {
-            std::cerr << "ERROR when trying to read \"group"
-                      << idStr
-                      << "_tasks.json\" file"
-                      << std::endl;
         }
         taskfileStream.close();       
         
@@ -162,20 +157,19 @@ void GroupManager::loadGroupData() {
     }
 }
 
-
 void GroupManager::saveGroupData() {
 
-    std::cout << "Saving JSON group data file..." << std::endl;
     std::ofstream file(filepath + "groupData.json");
     if (file.is_open()) {
         file << std::setw(4) << data << std::endl;
-        std::cout << "Saved JSON group data file" << std::endl;
     } else {
-        std::cerr << "ERROR when trying to write to groupData.json file"
+        std::cerr << outputPreamble
+                  << "ERROR when trying to write to groupData.json file"
                   << std::endl;
     }
     file.close();
 }
+
 
 
 std::unique_ptr<Group> GroupManager::buildGroup(const int groupId) {
@@ -216,7 +210,8 @@ std::unique_ptr<Group> GroupManager::buildGroup(const int groupId) {
             jsonStrToTopic(groupId)
         );
     } else {
-        std::cout << "No known group of type \""
+        std::cout << outputPreamble
+                  << "No known group of type \""
                   << data[groupId]["type"]
                   << "\", using a default type instead..."
                   << std::endl;
@@ -224,7 +219,6 @@ std::unique_ptr<Group> GroupManager::buildGroup(const int groupId) {
         return std::make_unique<Group>(groupId, name);
     }
 }
-
 
 std::unique_ptr<Task> GroupManager::buildTask(const json& taskfile, const int taskId) {
     std::string name = taskfile[taskId]["name"];
@@ -331,7 +325,8 @@ std::unique_ptr<Task> GroupManager::buildTask(const json& taskfile, const int ta
                 grade
             );
     } else {
-        std::cout << "Unknown task type of \""
+        std::cout << outputPreamble
+                  << "Unknown task type of \""
                   << type
                   << "\", using a default type instead..."
                   << std::endl;
@@ -345,6 +340,7 @@ std::unique_ptr<Task> GroupManager::buildTask(const json& taskfile, const int ta
 }
 
 
+
 Semester GroupManager::jsonStrToSemester(const int groupId) {
     std::string semesterStr = data[groupId]["semester"];
     if (semesterStr == "Spring") {
@@ -354,7 +350,8 @@ Semester GroupManager::jsonStrToSemester(const int groupId) {
     } else if (semesterStr == "Summer") {
         return Semester::SUMMER;
     } else {
-        std::cerr << "ERROR when reading from group data JSON, unknown semester \"" 
+        std::cerr << outputPreamble
+                  << "ERROR when reading from group data JSON, unknown semester \"" 
                   << semesterStr
                   << "\" from the group " 
                   << data[groupId]["name"] 
@@ -362,7 +359,6 @@ Semester GroupManager::jsonStrToSemester(const int groupId) {
         throw std::invalid_argument("Unknown semester value in JSON");
     }
 }
-
 
 Topic GroupManager::jsonStrToTopic(const int groupId) {
     std::string topicStr = data[groupId]["topic"];
@@ -377,7 +373,8 @@ Topic GroupManager::jsonStrToTopic(const int groupId) {
     } else if (topicStr == "Biology") {
         return Topic::BIO;
     } else {
-        std::cerr << "ERROR when reading from group data JSON, unknown topic \"" 
+        std::cerr << outputPreamble
+                  << "ERROR when reading from group data JSON, unknown topic \"" 
                   << topicStr
                   << "\" from the group " 
                   << data[groupId]["name"] 
@@ -386,19 +383,18 @@ Topic GroupManager::jsonStrToTopic(const int groupId) {
     }
 }
 
-
 std::string GroupManager::semesterToJsonStr(const Semester& semester) {
     switch(semester) {
         case Semester::SPRING: return "Spring";
         case Semester::FALL: return "Fall";
         case Semester::SUMMER: return "Summer";
         default:
-            std::cerr << "ERROR when trying to translate into a string for saving into a JSON"
+            std::cerr << outputPreamble
+                      << "ERROR when trying to translate into a string for saving into a JSON"
                       << std::endl;
             throw std::invalid_argument("Unknown semester value");
     }
 }
-
 
 std::string GroupManager::topicToJsonStr(const Topic& topic) {
     switch(topic) {
@@ -408,7 +404,8 @@ std::string GroupManager::topicToJsonStr(const Topic& topic) {
         case Topic::CHEM: return "Chemistry";
         case Topic::BIO: return "Biology";
         default:
-            std::cerr << "ERROR when trying to translate into a string for saving into a JSON"
+            std::cerr << outputPreamble
+                      << "ERROR when trying to translate into a string for saving into a JSON"
                       << std::endl;
             throw std::invalid_argument("Unknown topic value");
     }

@@ -16,6 +16,7 @@ using json = nlohmann::json;
 class GroupManager {
     private:
         std::string filepath;
+        std::string outputPreamble;
         json data;
         std::vector<std::unique_ptr<Group>> groups;
         void checkDataDirectory();
@@ -28,7 +29,10 @@ class GroupManager {
         std::string semesterToJsonStr(const Semester &semester);
         std::string topicToJsonStr(const Topic &topic);
     public:
-        GroupManager(const std::string& filepath);
+        GroupManager(
+            const std::string& filepath, 
+            const std::string& outputPreamble
+        );
         const std::vector<std::unique_ptr<Group>>& getGroups() const;
         void setGroups(std::vector<std::unique_ptr<Group>>&& newGroups);
         void addGroup(std::unique_ptr<Group> newGroup);
