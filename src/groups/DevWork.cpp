@@ -1,6 +1,6 @@
 #include "groups/DevWork.hpp"
 
-DevWork::DevWork(int idNum, const std::string& name, uint8_t year, 
+DevWork::DevWork(int idNum, const std::string& name, uint16_t year, 
         const Topic& topic) : Group(idNum, name) {
 
     this->type = "DevWork";
@@ -8,11 +8,11 @@ DevWork::DevWork(int idNum, const std::string& name, uint8_t year,
     this->topic = topic;
 }
 
-uint8_t DevWork::getYear() const {
+uint16_t DevWork::getYear() const {
     return year;
 }
 
-void DevWork::setYear(uint8_t year) {
+void DevWork::setYear(uint16_t year) {
     this->year = year;
 }
 

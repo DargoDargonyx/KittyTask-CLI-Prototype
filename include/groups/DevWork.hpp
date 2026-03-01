@@ -8,17 +8,17 @@
 
 class DevWork : public Group {
     private:
-        uint8_t year;
+        uint16_t year;
         Topic topic;
     public:
         DevWork(
             int idNum, 
             const std::string& name, 
-            uint8_t year, 
+            uint16_t year, 
             const Topic& topic
         );
-        uint8_t getYear() const;
-        void setYear(uint8_t year);
+        uint16_t getYear() const;
+        void setYear(uint16_t year);
         Topic getTopic() const;
         void setTopic(const Topic& topic);
 };

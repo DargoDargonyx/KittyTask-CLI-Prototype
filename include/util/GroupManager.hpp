@@ -4,6 +4,9 @@
 #include "external/json.hpp"
 #include "groups/Group.hpp"
 #include "tasks/Task.hpp"
+#include "util/Semester.hpp"
+#include "util/Topic.hpp"
+
 #include <string>
 #include <vector>
 #include <memory>

@@ -1,6 +1,6 @@
 #include "groups/Research.hpp"
 
-Research::Research(int idNum, const std::string& name, uint8_t year, 
+Research::Research(int idNum, const std::string& name, uint16_t year, 
         const Semester& semester, const Topic& topic) : Group(idNum, name) {
 
     this->type = "Research";
@@ -9,11 +9,11 @@ Research::Research(int idNum, const std::string& name, uint8_t year,
     this->topic = topic;
 }
 
-uint8_t Research::getYear() const {
+uint16_t Research::getYear() const {
     return year;
 }
 
-void Research::setYear(uint8_t year) {
+void Research::setYear(uint16_t year) {
     this->year = year;
 }
 

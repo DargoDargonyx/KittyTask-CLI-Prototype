@@ -1,6 +1,6 @@
 #include "groups/SelfStudy.hpp"
 
-SelfStudy::SelfStudy(int idNum, const std::string& name, uint8_t year, 
+SelfStudy::SelfStudy(int idNum, const std::string& name, uint16_t year, 
         const Semester& semester, const Topic& topic) : Group(idNum, name) {
 
     this->type = "SelfStudy";
@@ -9,11 +9,11 @@ SelfStudy::SelfStudy(int idNum, const std::string& name, uint8_t year,
     this->topic = topic;
 }
 
-uint8_t SelfStudy::getYear() const {
+uint16_t SelfStudy::getYear() const {
     return year;
 }
 
-void SelfStudy::setYear(uint8_t year) {
+void SelfStudy::setYear(uint16_t year) {
     this->year = year;
 }
 

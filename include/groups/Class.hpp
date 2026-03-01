@@ -9,21 +9,21 @@
 
 class Class : public Group {
     private:
-        uint8_t year;
+        uint16_t year;
         Semester semester;
         Topic topic;
-        int grade;
+        uint8_t grade;
     public:
         Class(
             int idNum, 
             const std::string& name, 
-            uint8_t year, 
+            uint16_t year, 
             const Semester& semester, 
             const Topic& topic,
             uint8_t grade
         );
-        uint8_t getYear() const;
-        void setYear(uint8_t year);
+        uint16_t getYear() const;
+        void setYear(uint16_t year);
         Semester getSemester() const;
         void setSemester(const Semester& semester);
         Topic getTopic() const;

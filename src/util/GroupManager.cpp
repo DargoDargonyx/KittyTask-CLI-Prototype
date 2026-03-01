@@ -79,6 +79,7 @@ void GroupManager::addGroup(std::unique_ptr<Group> newGroup) {
         data[idNum]["topic"] = topicToJsonStr(sGroup->getTopic());
     }
     groups.push_back(std::move(newGroup));
+    saveGroupData();
 }
 
 void GroupManager::removeGroup(int groupId) {}
@@ -99,9 +100,9 @@ void GroupManager::checkDataDirectory() {
     }
 
     try {
-        bool tasksCreated = fs::create_directories(filepath + "/tasks");
+        bool tasksCreated = fs::create_directories(filepath + "tasks/");
         if (tasksCreated) {
-            std::cout << "Directory created: " << filepath << "/tasks" << std::endl;
+            std::cout << "Directory created: " << filepath << "tasks/" << std::endl;
         }
     } catch (const fs::filesystem_error& e) {
         std::cerr << "ERROR when creating directory \""
@@ -129,7 +130,7 @@ void GroupManager::loadGroupData() {
         std::unique_ptr<Group> group = buildGroup(i);
         std::string idStr = std::to_string(group->getIdNum());
         std::string filename = filepath
-                + "/tasks/group"
+                + "tasks/group"
                 + idStr
                 + "_tasks.json";
         
