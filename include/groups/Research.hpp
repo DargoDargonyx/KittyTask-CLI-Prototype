@@ -23,8 +23,10 @@ class Research : public Group {
         uint16_t getYear() const;
         void setYear(uint16_t year);
         Semester getSemester() const;
+        std::string getSemesterStr() const;
         void setSemester(const Semester& semester);
         Topic getTopic() const;
+        std::string getTopicStr() const;
         void setTopic(const Topic& topic);
 };
 

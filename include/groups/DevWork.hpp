@@ -20,6 +20,7 @@ class DevWork : public Group {
         uint16_t getYear() const;
         void setYear(uint16_t year);
         Topic getTopic() const;
+        std::string getTopicStr() const;
         void setTopic(const Topic& topic);
 };
 

@@ -26,8 +26,6 @@ class GroupManager {
         std::unique_ptr<Task> buildTask(const json& taskfile, const int taskId);
         Semester jsonStrToSemester(const int groupId);
         Topic jsonStrToTopic(const int groupId);
-        std::string semesterToJsonStr(const Semester &semester);
-        std::string topicToJsonStr(const Topic &topic);
     public:
         GroupManager(
             const std::string& filepath, 

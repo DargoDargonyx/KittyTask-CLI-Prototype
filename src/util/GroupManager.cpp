@@ -64,23 +64,23 @@ void GroupManager::addGroup(std::unique_ptr<Group> newGroup) {
     if (type == "Class") {
         Class* cGroup = static_cast<Class*>(newGroup.get());
         data[idNum]["year"] = cGroup->getYear();
-        data[idNum]["semester"] = semesterToJsonStr(cGroup->getSemester());
-        data[idNum]["topic"] = topicToJsonStr(cGroup->getTopic());
+        data[idNum]["semester"] = cGroup->getSemesterStr();
+        data[idNum]["topic"] = cGroup->getTopicStr();
         data[idNum]["grade"] = cGroup->getGrade();
     } else if (type == "DevWork") {
         DevWork* dGroup = static_cast<DevWork*>(newGroup.get());
         data[idNum]["year"] = dGroup->getYear();
-        data[idNum]["topic"] = topicToJsonStr(dGroup->getTopic());
+        data[idNum]["topic"] = dGroup->getTopicStr();
     } else if (type == "Research") {
         Research* rGroup = static_cast<Research*>(newGroup.get());
         data[idNum]["year"] = rGroup->getYear();
-        data[idNum]["semester"] = semesterToJsonStr(rGroup->getSemester());
-        data[idNum]["topic"] = topicToJsonStr(rGroup->getTopic());
+        data[idNum]["semester"] = rGroup->getSemesterStr();
+        data[idNum]["topic"] = rGroup->getTopicStr();
     } else if (type == "SelfStudy") {
         SelfStudy* sGroup = static_cast<SelfStudy*>(newGroup.get());
         data[idNum]["year"] = sGroup->getYear();
-        data[idNum]["semester"] = semesterToJsonStr(sGroup->getSemester());
-        data[idNum]["topic"] = topicToJsonStr(sGroup->getTopic());
+        data[idNum]["semester"] = sGroup->getSemesterStr();
+        data[idNum]["topic"] = sGroup->getTopicStr();
     }
     groups.push_back(std::move(newGroup));
     saveGroupData();
@@ -380,33 +380,5 @@ Topic GroupManager::jsonStrToTopic(const int groupId) {
                   << data[groupId]["name"] 
                   << std::endl;
         throw std::invalid_argument("Unknown topic value in JSON");
-    }
-}
-
-std::string GroupManager::semesterToJsonStr(const Semester& semester) {
-    switch(semester) {
-        case Semester::SPRING: return "Spring";
-        case Semester::FALL: return "Fall";
-        case Semester::SUMMER: return "Summer";
-        default:
-            std::cerr << outputPreamble
-                      << "ERROR when trying to translate into a string for saving into a JSON"
-                      << std::endl;
-            throw std::invalid_argument("Unknown semester value");
-    }
-}
-
-std::string GroupManager::topicToJsonStr(const Topic& topic) {
-    switch(topic) {
-        case Topic::MATH: return "Math";
-        case Topic::CS: return "CS";
-        case Topic::PHYSICS: return "Physics";
-        case Topic::CHEM: return "Chemistry";
-        case Topic::BIO: return "Biology";
-        default:
-            std::cerr << outputPreamble
-                      << "ERROR when trying to translate into a string for saving into a JSON"
-                      << std::endl;
-            throw std::invalid_argument("Unknown topic value");
     }
 }

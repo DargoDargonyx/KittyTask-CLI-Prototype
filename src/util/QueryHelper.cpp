@@ -84,7 +84,7 @@ std::string QueryHelper::queryGroupSemester() {
                   << "Enter a semester type (Spring, Fall, Summer): ";
         std::getline(std::cin, semesterStr);
         semesterStr = translateSemester(semesterStr);
-        validSemester = isValidGroupSemester(semesterStr);
+        validSemester = isValidSemester(semesterStr);
         if (!validSemester) {
             std::cout << outputPreamble
                       << "Not a valid semester, try again." 
@@ -102,7 +102,7 @@ std::string QueryHelper::queryGroupTopic() {
                   << "Enter a topic type: ";
         std::getline(std::cin, topicStr);
         topicStr = translateTopic(topicStr);
-        validTopic = isValidGroupTopic(topicStr);
+        validTopic = isValidTopic(topicStr);
         if (!validTopic) {
             std::cout << outputPreamble
                       << "Not a valid topic, try again." 
@@ -139,13 +139,13 @@ bool QueryHelper::isValidGroupYear(uint16_t groupYear) {
         groupYear <= currentYear + 10;
 }
 
-bool QueryHelper::isValidGroupSemester(const std::string& semester) {
+bool QueryHelper::isValidSemester(const std::string& semester) {
     return semester == "Spring" ||
         semester == "Fall" ||
         semester == "Summer";
 }
 
-bool QueryHelper::isValidGroupTopic(const std::string& topic) {
+bool QueryHelper::isValidTopic(const std::string& topic) {
     return topic == "Math" ||
         topic == "CS" ||
         topic == "Physics" ||
