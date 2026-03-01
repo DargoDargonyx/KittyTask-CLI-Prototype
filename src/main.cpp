@@ -36,11 +36,39 @@ int main(int argc, char **argv) {
     CLI::App app{"KittyTracker-CLI"};
     GroupManager manager(filepath, outputPreamble);
     QueryHelper helper(outputPreamble);
-    int groupCounter = static_cast<int>(manager.getGroups().size());
-
+    
+    CLI::App* listGroups = app.add_subcommand("listGroups", "Lists all the known groups");
+    std::string filterType;
+    listGroups->add_option("-t,--type", filterType, "Only list groups of this type");
+    listGroups->callback([&]() {
+        const std::vector<std::unique_ptr<Group>>& groups = manager.getGroups();
+        if (!filterType.empty()) {
+                filterType = helper.translateGroupType(filterType);
+                bool validType = helper.isValidGroupType(filterType);
+                if (!validType) {
+                    std::cerr << outputPreamble
+                              << "ERROR when trying to find type \""
+                              << filterType 
+                              << "\", please try again.";
+                    return;
+                }
+        }
+        int counter = 0;
+        for (int i = 0; i < groups.size(); i++) {
+            if (!filterType.empty() && filterType != groups.at(i)->getType()) {
+                continue;
+            }
+            std::cout << "(" << std::to_string(counter) << ") "
+                      << groups.at(i)->getType() << ": "
+                      << groups.at(i)->getName() 
+                      << std::endl;
+            counter++;
+        }
+    });
 
     CLI::App* addGroup = app.add_subcommand("addGroup", "Add a new group");
     addGroup->callback([&]() {
+        int groupCounter = static_cast<int>(manager.getGroups().size());
         std::string groupType;
         groupType = helper.queryGroupType();
         std::string groupName = helper.queryGroupName();
@@ -98,6 +126,7 @@ int main(int argc, char **argv) {
                   << "\"" 
                   << std::endl;
     });
+
 
     CLI11_PARSE(app, argc, argv);
     return 0;
