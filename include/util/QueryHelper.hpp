@@ -11,14 +11,18 @@ class QueryHelper {
         std::string outputPreamble;
         bool isValidGroupName(const std::string& groupName);
         bool isValidGroupYear(uint16_t groupType);
+        bool isValidYesNo(const std::string& str);
         std::string strToLower(const std::string& str);
+        std::string translateYesNo(const std::string& str);
     public:
-        QueryHelper(const std::string& outputPreamble);
+        QueryHelper(
+            const std::string& outputPreamble);
         std::string queryGroupType();
         std::string queryGroupName();
         uint16_t queryGroupYear();
         std::string queryGroupSemester();
         std::string queryGroupTopic();
+        std::string queryRemAllGroups();
         bool isValidGroupType(const std::string& groupType);
         bool isValidSemester(const std::string& semester);
         bool isValidTopic(const std::string& topic);

@@ -26,6 +26,7 @@ class GroupManager {
         std::unique_ptr<Task> buildTask(const json& taskfile, const int taskId);
         Semester jsonStrToSemester(const int groupId);
         Topic jsonStrToTopic(const int groupId);
+        void refreshGroups();
     public:
         GroupManager(
             const std::string& filepath, 
@@ -34,7 +35,11 @@ class GroupManager {
         const std::vector<std::unique_ptr<Group>>& getGroups() const;
         void setGroups(std::vector<std::unique_ptr<Group>>&& newGroups);
         void addGroup(std::unique_ptr<Group> newGroup);
-        void removeGroup(int groupId);
+        void removeGroup(const int groupId);
+        void clearAllGroups();
+        bool containsGroup(const std::string& groupName);
+        Group* getGroupFromId(const int groupId);
+        Group* getGroupFromName(const std::string& groupName);
 };
 
 #endif //GROUPMANAGER_H

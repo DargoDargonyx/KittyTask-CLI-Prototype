@@ -86,8 +86,83 @@ void GroupManager::addGroup(std::unique_ptr<Group> newGroup) {
     saveGroupData();
 }
 
-void GroupManager::removeGroup(int groupId) {}
+void GroupManager::removeGroup(const int groupId) {
+    for (int i = 0; i < static_cast<int>(groups.size()); i++) {
+        if (groups.at(i)->getIdNum() == groupId) {
+            groups.erase(groups.begin() + i);
+            data.erase(i);
+            break;
+        }
+    }
+    refreshGroups();
+}
 
+void GroupManager::clearAllGroups() {
+    groups.clear();
+    data.clear();
+    saveGroupData();
+}
+
+bool GroupManager::containsGroup(const std::string& groupName) {
+    bool containsGroup = false;
+    for (int i = 0; i < static_cast<int>(groups.size()); i++) {
+        if (groups.at(i)->getName() == groupName) {
+            containsGroup = true;
+            break;
+        }
+    }
+    return containsGroup;
+}
+
+Group* GroupManager::getGroupFromId(const int groupId) {
+    for (int i = 0; i < static_cast<int>(groups.size()); i++) {
+        if (groups.at(i)->getIdNum() == groupId) {
+            return groups.at(i).get();
+        }   
+    }
+    throw std::invalid_argument("ERROR when trying to find a group by id that doesn't exist");
+}
+
+Group* GroupManager::getGroupFromName(const std::string& groupName) {
+    for (int i = 0; i < static_cast<int>(groups.size()); i++) {
+        if (groups.at(i)->getName() == groupName) {
+            return groups.at(i).get();
+        }
+    }
+    throw std::invalid_argument("Error when trying to find a group by name that doesn't exist");
+}
+
+void GroupManager::refreshGroups() {
+    for (int i = 0; i < static_cast<int>(groups.size()); i++) {
+        groups.at(i)->setIdNum(i);
+        std::string type = groups.at(i)->getType();
+        data[i]["name"] = groups.at(i)->getName();
+        data[i]["type"] = type;
+
+        if (type == "Class") {
+            Class* cGroup = static_cast<Class*>(groups.at(i).get());
+            data[i]["year"] = cGroup->getYear();
+            data[i]["semester"] = cGroup->getSemesterStr();
+            data[i]["topic"] = cGroup->getTopicStr();
+            data[i]["grade"] = cGroup->getGrade();
+        } else if (type == "DevWork") {
+            DevWork* dGroup = static_cast<DevWork*>(groups.at(i).get());
+            data[i]["year"] = dGroup->getYear();
+            data[i]["topic"] = dGroup->getTopicStr();
+        } else if (type == "Research") {
+            Research* rGroup = static_cast<Research*>(groups.at(i).get());
+            data[i]["year"] = rGroup->getYear();
+            data[i]["semester"] = rGroup->getSemesterStr();
+            data[i]["topic"] = rGroup->getTopicStr();
+        } else if (type == "SelfStudy") {
+            SelfStudy* sGroup = static_cast<SelfStudy*>(groups.at(i).get());
+            data[i]["year"] = sGroup->getYear();
+            data[i]["semester"] = sGroup->getSemesterStr();
+            data[i]["topic"] = sGroup->getTopicStr();
+        }
+    }
+    saveGroupData();
+}
 
 
 void GroupManager::checkDataDirectory() {

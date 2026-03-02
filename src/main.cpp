@@ -38,121 +38,132 @@ int main(int argc, char **argv) {
     QueryHelper helper(outputPreamble);
     
     CLI::App* listGroups = app.add_subcommand("listGroups", "Lists all the known groups");
-    std::string filterType;
+    std::string filterListType;
     listGroups->add_option(
         "-t,--type", 
-        filterType, 
+        filterListType, 
         "Only list groups of this type"
     );
-    std::string filterSemester;
+    std::string filterListSemester;
     listGroups->add_option(
         "-S,--semester", 
-        filterSemester, 
+        filterListSemester, 
         "Only list groups of this semester"
     );
-    std::string filterTopic;
+    std::string filterListTopic;
     listGroups->add_option(
         "-T,--topic", 
-        filterTopic,
+        filterListTopic,
         "Only list groups of this topic"
     );
     listGroups->callback([&]() {
+        int filterCounter = 0;
+        bool hasFilterListType = !filterListType.empty();
+        bool hasFilterListSemester = !filterListSemester.empty();
+        bool hasFilterListTopic = !filterListTopic.empty();
+
+        if (hasFilterListType) filterCounter ++;
+        if (hasFilterListSemester) filterCounter ++;
+        if (hasFilterListTopic) filterCounter ++;
+        if (filterCounter > 1) {
+            std::cerr << outputPreamble
+                      << "Invalid command, can't use multiple filters at the same time"
+                      << std::endl;
+            return;
+        }
+
         const std::vector<std::unique_ptr<Group>>& groups = manager.getGroups();
-        if (!filterType.empty()) {
-            filterType = helper.translateGroupType(filterType);
-            bool validType = helper.isValidGroupType(filterType);
+        if (hasFilterListType) {
+            filterListType = helper.translateGroupType(filterListType);
+            bool validType = helper.isValidGroupType(filterListType);
             if (!validType) {
                 std::cerr << outputPreamble
                           << "ERROR when trying to find type \""
-                          << filterType 
+                          << filterListType 
                           << "\", please try again."
                           << std::endl;
                 return;
             }
-        }
-        if (!filterSemester.empty()) {
-            filterSemester = helper.translateSemester(filterSemester);
-            bool validSemester = helper.isValidSemester(filterSemester);
+        } else if (hasFilterListSemester) {
+            filterListSemester = helper.translateSemester(filterListSemester);
+            bool validSemester = helper.isValidSemester(filterListSemester);
             if (!validSemester) {
                 std::cerr << outputPreamble
                           << "ERROR when trying to find semester \""
-                          << filterSemester 
+                          << filterListSemester 
                           << "\", please try again."
                           << std::endl;
                 return;
             }
-        }
-        if (!filterTopic.empty()) {
-            filterTopic = helper.translateTopic(filterTopic);
-            bool validTopic = helper.isValidTopic(filterTopic);
+        } else if (hasFilterListTopic) {
+            filterListTopic = helper.translateTopic(filterListTopic);
+            bool validTopic = helper.isValidTopic(filterListTopic);
             if (!validTopic) {
                 std::cerr << outputPreamble
                           << "ERROR when trying to find topic \""
-                          << filterTopic 
+                          << filterListTopic 
                           << "\", please try again."
                           << std::endl;
                 return;
             }
         }
+
         int counter = 0;
         for (int i = 0; i < groups.size(); i++) {
             const std::unique_ptr<Group>& group = groups.at(i);
             std::string groupType = group->getType();
-            if (!filterType.empty() && filterType != groupType) {
+            if (hasFilterListType && filterListType != groupType) {
                 continue;
-            }
-            if (!filterSemester.empty()) {
+            } else if (hasFilterListSemester) {
                 if (groupType != "Class" 
                         && groupType != "Research" 
                         && groupType != "SelfStudy") {
                     continue;
-                }
-                if (Class* cGroup = 
+                } else if (Class* cGroup = 
                         dynamic_cast<Class*>(group.get())) {
-                    if (filterSemester != cGroup->getSemesterStr()) {
+                    if (filterListSemester != cGroup->getSemesterStr()) {
                         continue;
                     } 
                 } else if (Research* rGroup = 
                         dynamic_cast<Research*>(group.get())) {
-                    if (filterSemester != rGroup->getSemesterStr()) {
+                    if (filterListSemester != rGroup->getSemesterStr()) {
                         continue;
                     } 
                 } else if (SelfStudy* sGroup = 
                         dynamic_cast<SelfStudy*>(group.get())) {
-                    if (filterSemester != sGroup->getSemesterStr()) {
+                    if (filterListSemester != sGroup->getSemesterStr()) {
                         continue;
                     } 
                 }
-            }
-            if (!filterTopic.empty()) {
+            } else if (hasFilterListTopic) {
                 if (groupType != "Class" 
                         && groupType != "DevWork" 
                         && groupType != "Research" 
                         && groupType != "SelfStudy") {
                     continue;
-                }
-                if (Class* cGroup = 
+                } else if (Class* cGroup = 
                         dynamic_cast<Class*>(group.get())) {
-                    if (filterTopic != cGroup->getTopicStr()) {
+                    if (filterListTopic != cGroup->getTopicStr()) {
                         continue;
                     }
                 } else if (DevWork* dGroup = 
                         dynamic_cast<DevWork*>(group.get())) {
-                    if (filterTopic != dGroup->getTopicStr()) {
+                    if (filterListTopic != dGroup->getTopicStr()) {
                         continue;
                     }
                 } else if (Research* rGroup = 
                         dynamic_cast<Research*>(group.get())) {
-                    if (filterTopic != rGroup->getTopicStr()) {
+                    if (filterListTopic != rGroup->getTopicStr()) {
                         continue;
                     } 
                 } else if (SelfStudy* sGroup = 
                         dynamic_cast<SelfStudy*>(group.get())) {
-                    if (filterTopic != sGroup->getTopicStr()) {
+                    if (filterListTopic != sGroup->getTopicStr()) {
                         continue;
                     } 
                 }
             }
+
             std::cout << "(" << std::to_string(counter) << ") "
                       << groupType << ": "
                       << group->getName() 
@@ -164,9 +175,18 @@ int main(int argc, char **argv) {
     CLI::App* addGroup = app.add_subcommand("addGroup", "Add a new group");
     addGroup->callback([&]() {
         int groupCounter = static_cast<int>(manager.getGroups().size());
-        std::string groupType;
-        groupType = helper.queryGroupType();
-        std::string groupName = helper.queryGroupName();
+        std::string groupName;
+        bool validName = false;
+        while (!validName) {
+            groupName = helper.queryGroupName();
+            validName = !manager.containsGroup(groupName);
+            if (!validName) {
+                std::cerr << outputPreamble
+                          << "Can't add a group with a name that's already taken, please try again."
+                          << std::endl;
+            }
+        }
+        std::string groupType = helper.queryGroupType();
 
         std::unique_ptr<Group> newGroup;
         if (groupType == "Class") {
@@ -222,6 +242,211 @@ int main(int argc, char **argv) {
                   << std::endl;
     });
 
+
+
+    CLI::App* remGroup = app.add_subcommand(
+            "remGroup",
+            "Remove a group from the current groups"
+    );
+    bool filterRemAll = false;
+    remGroup->add_flag(
+        "--all", 
+        filterRemAll, 
+        "Remove all groups from the current groups"
+    );
+    std::string remGroupName;
+    remGroup->add_option(
+        "-n, --name",
+        remGroupName,
+        "Remove a group by name"
+    );
+    std::string filterRemType;
+    remGroup->add_option(
+        "-t, --type",
+        filterRemType,
+        "Remove all groups of the given type"
+    );
+    std::string filterRemSemester;
+    remGroup->add_option(
+        "-S, --semester",
+        filterRemSemester,
+        "Remove all groups of the given semester"
+    );
+    std::string filterRemTopic;
+    remGroup->add_option(
+        "-T, --topic",
+        filterRemTopic,
+        "Remove all groups of the given topic"
+    );
+
+    remGroup->callback([&]() {
+        int filterCounter = 0;
+        bool hasRemName = !remGroupName.empty();
+        bool hasFilterRemType = !filterRemType.empty();
+        bool hasFilterRemSemester = !filterRemSemester.empty();
+        bool hasFilterRemTopic = !filterRemTopic.empty();
+
+        if (hasRemName) {
+            if (filterRemAll || hasFilterRemType || 
+                    hasFilterRemSemester || hasFilterRemTopic) {
+                std::cerr << outputPreamble
+                          << "Invalid command, can't have a specific name when trying to use a filter flag" 
+                          << std::endl;
+                return;
+            }
+            if (!manager.containsGroup(remGroupName)) {
+                std::cerr << outputPreamble
+                          << "Invalid command, no group of that name"
+                          << std::endl;
+                return;
+            }
+        }
+        if (filterRemAll) filterCounter ++;
+        if (hasFilterRemType) filterCounter ++;
+        if (hasFilterRemSemester) filterCounter ++;
+        if (hasFilterRemTopic) filterCounter ++;
+        if (filterCounter > 1) {
+            std::cerr << outputPreamble
+                      << "Invalid command, can't use multiple filters at the same time"
+                      << std::endl;
+            return;
+        } else if (filterCounter == 0 && !hasRemName) {
+            std::cerr << outputPreamble
+                      << "Invalid command, you need to set a flag"
+                      << std::endl;
+            return;
+        }
+
+
+        const std::vector<std::unique_ptr<Group>>& groups = manager.getGroups();
+        if (filterRemAll) {
+            std::string response;
+            response = helper.queryRemAllGroups();
+            if (response == "y") {
+                manager.clearAllGroups();
+                std::cout << outputPreamble
+                          << "Removed all groups"
+                          << std::endl;
+            }
+            return;
+        } else if (hasFilterRemType) {
+            filterRemType = helper.translateGroupType(filterRemType);
+            bool validType = helper.isValidGroupType(filterRemType);
+            if (!validType) {
+                std::cerr << outputPreamble
+                          << "ERROR when trying to find type \""
+                          << filterRemType 
+                          << "\", please try again."
+                          << std::endl;
+                return;
+            }
+        } else if (hasFilterRemSemester) {
+            filterRemSemester = helper.translateSemester(filterRemSemester);
+            bool validSemester = helper.isValidSemester(filterRemSemester);
+            if (!validSemester) {
+                std::cerr << outputPreamble
+                          << "ERROR when trying to find semester \""
+                          << filterRemSemester 
+                          << "\", please try again."
+                          << std::endl;
+                return;
+            }
+        } else if (hasFilterRemTopic) {
+            filterRemTopic = helper.translateTopic(filterRemTopic);
+            bool validTopic = helper.isValidTopic(filterRemTopic);
+            if (!validTopic) {
+                std::cerr << outputPreamble
+                          << "ERROR when trying to find topic \""
+                          << filterRemTopic 
+                          << "\", please try again."
+                          << std::endl;
+                return;
+            }
+        }
+
+
+        std::vector<int> toRemove;
+        for (int i = 0; i < static_cast<int>(groups.size()); i++) {
+            const std::unique_ptr<Group>& group = groups.at(i);
+            std::string groupType = group->getType();
+            if (hasRemName) {
+                if (group->getName() == remGroupName) {
+                    toRemove.push_back(group->getIdNum());
+                    break;
+                } else { continue; }
+            } else {
+                if (hasFilterRemType && filterRemType != groupType) {
+                    continue;
+                } else if (hasFilterRemSemester) {
+                    if (groupType != "Class" 
+                            && groupType != "Research" 
+                            && groupType != "SelfStudy") {
+                        continue;
+                    } else if (Class* cGroup = 
+                            dynamic_cast<Class*>(group.get())) {
+                        if (filterRemSemester == cGroup->getSemesterStr()) {
+                            toRemove.push_back(group->getIdNum());
+                            continue;
+                        } 
+                    } else if (Research* rGroup = 
+                            dynamic_cast<Research*>(group.get())) {
+                        if (filterRemSemester == rGroup->getSemesterStr()) {
+                            toRemove.push_back(group->getIdNum());
+                            continue;
+                        } 
+                    } else if (SelfStudy* sGroup = 
+                            dynamic_cast<SelfStudy*>(group.get())) {
+                        if (filterRemSemester == sGroup->getSemesterStr()) {
+                            toRemove.push_back(group->getIdNum());
+                            continue;
+                        } 
+                    }
+                } else if (hasFilterRemTopic) {
+                    if (groupType != "Class" 
+                            && groupType != "DevWork" 
+                            && groupType != "Research" 
+                            && groupType != "SelfStudy") {
+                        continue;
+                    } else if (Class* cGroup = 
+                            dynamic_cast<Class*>(group.get())) {
+                        if (filterRemTopic == cGroup->getTopicStr()) {
+                            toRemove.push_back(group->getIdNum());
+                            continue;
+                        }
+                    } else if (DevWork* dGroup = 
+                            dynamic_cast<DevWork*>(group.get())) {
+                        if (filterRemTopic == dGroup->getTopicStr()) {
+                            toRemove.push_back(group->getIdNum());
+                            continue;
+                        }
+                    } else if (Research* rGroup = 
+                            dynamic_cast<Research*>(group.get())) {
+                        if (filterRemTopic == rGroup->getTopicStr()) {
+                            toRemove.push_back(group->getIdNum());
+                            continue;
+                        } 
+                    } else if (SelfStudy* sGroup = 
+                            dynamic_cast<SelfStudy*>(group.get())) {
+                        if (filterRemTopic == sGroup->getTopicStr()) {
+                            toRemove.push_back(group->getIdNum());
+                            continue;
+                        } 
+                    }
+                }
+            }
+        }
+            
+        for (int i = static_cast<int>(toRemove.size()) - 1; i >= 0; i--) {
+            int groupId = toRemove.at(i);
+            std::cout << outputPreamble
+                      << "Removed group \""
+                      << manager.getGroupFromId(groupId)->getName()
+                      << "\""
+                      << std::endl;
+            manager.removeGroup(groupId);
+        }
+    });
+    
 
     CLI11_PARSE(app, argc, argv);
     return 0;

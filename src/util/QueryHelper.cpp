@@ -24,7 +24,7 @@ std::string QueryHelper::queryGroupType() {
         validType = isValidGroupType(groupType);
         if (!validType) {
             std::cout << outputPreamble 
-                      << "Not a valid type, try again." 
+                      << "Not a valid type, please try again." 
                       << std::endl;
         }
     }
@@ -41,7 +41,7 @@ std::string QueryHelper::queryGroupName() {
         validName = isValidGroupName(groupName);
         if (!validName) {
             std::cout << outputPreamble
-                      << "Not a valid name, try again." 
+                      << "Not a valid name, please try again. A name must be a non zero string that isn't already taken as a group name" 
                       << std::endl;
         }
     }
@@ -87,7 +87,7 @@ std::string QueryHelper::queryGroupSemester() {
         validSemester = isValidSemester(semesterStr);
         if (!validSemester) {
             std::cout << outputPreamble
-                      << "Not a valid semester, try again." 
+                      << "Not a valid semester, please try again." 
                       << std::endl;
         }
     }
@@ -105,11 +105,29 @@ std::string QueryHelper::queryGroupTopic() {
         validTopic = isValidTopic(topicStr);
         if (!validTopic) {
             std::cout << outputPreamble
-                      << "Not a valid topic, try again." 
+                      << "Not a valid topic, please try again." 
                       << std::endl;
         }
     }
     return topicStr;
+}
+
+std::string QueryHelper::queryRemAllGroups() {
+    std::string response;
+    bool validResponse = false;
+    while (!validResponse) {
+        std::cout << outputPreamble
+                  << "Are you sure that you want to remove all groups? (y/n): ";
+        std::getline(std::cin, response);
+        response = translateYesNo(response);
+        validResponse = isValidYesNo(response);
+        if (!validResponse) {
+            std::cout << outputPreamble
+                      << "Not a valid response, please try again."
+                      << std::endl;
+        }
+    }
+    return response;
 }
 
 
@@ -122,7 +140,7 @@ bool QueryHelper::isValidGroupType(const std::string& groupType) {
 }
 
 bool QueryHelper::isValidGroupName(const std::string& groupName) {
-    return groupName.length() > 0;
+    return groupName.length();
 }
 
 bool QueryHelper::isValidGroupYear(uint16_t groupYear) {
@@ -151,6 +169,10 @@ bool QueryHelper::isValidTopic(const std::string& topic) {
         topic == "Physics" ||
         topic == "Chemistry" ||
         topic == "Biology";
+}
+
+bool QueryHelper::isValidYesNo(const std::string& str) {
+    return str == "y" || str == "n";
 }
 
 
@@ -298,6 +320,17 @@ std::string QueryHelper::translateTaskType(const std::string& taskType) {
 }
 
 
+
+std::string QueryHelper::translateYesNo(const std::string& str) {
+    std::string lowerStr = strToLower(str);
+    if (lowerStr == "y" || lowerStr == "yes") {
+        return "y";
+    } else if (lowerStr == "n" || lowerStr == "no") {
+        return "n";
+    } else {
+        return str;
+    }
+}
 
 std::string QueryHelper::strToLower(const std::string& str) {
     std::string copy = str;
