@@ -43,6 +43,7 @@ class GroupManager {
         );
         // Accessors
         const std::vector<std::unique_ptr<Group>>& getGroups() const;
+        const std::vector<std::unique_ptr<Task>>& getTasks(const std::string& groupName);
         Group* getGroupFromId(const int groupId);
         Group* getGroupFromName(const std::string& groupName);
         bool containsGroup(const std::string& groupName);

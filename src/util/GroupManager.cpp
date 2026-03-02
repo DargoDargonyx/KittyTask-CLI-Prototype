@@ -465,20 +465,28 @@ const std::vector<std::unique_ptr<Group>>& GroupManager::getGroups() const {
 }
 
 /**
+ * @brief Returns a list of Task pointers for the given group.
+ * @param groupName The name of the group in question.
+ * @return The list of Task pointers in question.
+ */
+const std::vector<std::unique_ptr<Task>>& GroupManager::getTasks(
+        const std::string& groupName) {
+    
+    Group* group = getGroupFromName(groupName);
+    return group->getTasks();
+}
+
+/**
  * @brief Checks whether or not the groups field contains a specific group.
  * @param groupName The name of the group in question.
  * @return A boolean based in whether or not the groups field contains 
  * the group in question.
  */
 bool GroupManager::containsGroup(const std::string& groupName) {
-    bool containsGroup = false;
     for (int i = 0; i < static_cast<int>(groups.size()); i++) {
-        if (groups.at(i)->getName() == groupName) {
-            containsGroup = true;
-            break;
-        }
+        if (groups.at(i)->getName() == groupName) return true;
     }
-    return containsGroup;
+    return false;
 }
 
 /**

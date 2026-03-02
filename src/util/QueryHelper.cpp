@@ -8,11 +8,9 @@
 #include <cstdint>
 #include <iostream>
 #include <chrono>
+#include <tuple>
+#include <format>
 
-
-//==================================
-//========== Constructor ===========
-//==================================
 
 /**
  * @brief A one argument constructor for the class.
@@ -24,11 +22,6 @@ QueryHelper::QueryHelper(const std::string& outputPreamble) {
 
 
 
-//==============================
-//========== Queries ===========
-//==============================
-
-
 /**
  * @brief Handles the logic for querying the user for a group type.
  * @return A string representation of the group type in question.
@@ -37,14 +30,15 @@ std::string QueryHelper::queryGroupType() {
     std::string groupType;
     bool validType = false;
     while (!validType) {
-        std::cout << outputPreamble 
-                  << "Enter a group type: ";
+        std::cout << outputPreamble << "Enter a group type: ";
         std::getline(std::cin, groupType);
         groupType = translateGroupType(groupType);
         validType = isValidGroupType(groupType);
         if (!validType) {
             std::cout << outputPreamble 
-                      << "Not a valid type, please try again." 
+                      << "Not a valid type, please try again. "
+                      << "If you need to, please see the help menu "
+                      << "for possible group types."
                       << std::endl;
         }
     }
@@ -59,13 +53,14 @@ std::string QueryHelper::queryGroupName() {
     std::string groupName;
     bool validName = false;
     while (!validName) {
-        std::cout << outputPreamble 
-                  << "Enter a group name: ";
+        std::cout << outputPreamble << "Enter a group name: ";
         std::getline(std::cin, groupName);
         validName = isValidGroupName(groupName);
         if (!validName) {
             std::cout << outputPreamble
-                      << "Not a valid name, please try again. A name must be a non zero string that isn't already taken as a group name" 
+                      << "Not a valid name, please try again. "
+                      << "A name must be a non zero string that isn't "
+                      << "already taken as a group name." 
                       << std::endl;
         }
     }
@@ -82,8 +77,7 @@ uint16_t QueryHelper::queryGroupYear() {
     std::string yearStr;
     bool validYear = false;
     while (!validYear) {
-        std::cout << outputPreamble
-                  << "Enter a year for the group: ";
+        std::cout << outputPreamble << "Enter a year for the group: ";
         std::getline(std::cin, yearStr);
         try {
             groupYear = static_cast<uint16_t>(std::stoi(yearStr));
@@ -113,14 +107,15 @@ std::string QueryHelper::queryGroupSemester() {
     std::string semesterStr;
     bool validSemester = false;
     while (!validSemester) {
-        std::cout << outputPreamble
-                  << "Enter a semester type (Spring, Fall, Summer): ";
+        std::cout << outputPreamble << "Enter a semester type: ";
         std::getline(std::cin, semesterStr);
         semesterStr = translateSemester(semesterStr);
         validSemester = isValidSemester(semesterStr);
         if (!validSemester) {
             std::cout << outputPreamble
-                      << "Not a valid semester, please try again." 
+                      << "Not a valid semester, please try again. "
+                      << "If you need to, please see the help menu "
+                      << "for possible semesters."
                       << std::endl;
         }
     }
@@ -135,14 +130,15 @@ std::string QueryHelper::queryGroupTopic() {
     std::string topicStr;
     bool validTopic = false;
     while (!validTopic) {
-        std::cout << outputPreamble
-                  << "Enter a topic type: ";
+        std::cout << outputPreamble << "Enter a topic type: ";
         std::getline(std::cin, topicStr);
         topicStr = translateTopic(topicStr);
         validTopic = isValidTopic(topicStr);
         if (!validTopic) {
             std::cout << outputPreamble
-                      << "Not a valid topic, please try again." 
+                      << "Not a valid topic, please try again. "
+                      << "If you need to, please see the help menu "
+                      << "for possible topics."
                       << std::endl;
         }
     }
@@ -173,11 +169,72 @@ std::string QueryHelper::queryRemAllGroups() {
     return response;
 }
 
+/**
+ * @brief Handles the logic for querying the user for a task type.
+ * @return A string representation of the task type in question.
+ */
+std::string QueryHelper::queryTaskType() {
+    std::string taskType;
+    bool validType = false;
+    while (!validType) {
+        std::cout << outputPreamble << "Enter a task type: ";
+        std::getline(std::cin, taskType);
+        taskType = translateTaskType(taskType);
+        validType = isValidTaskType(taskType);
+        if (!validType) {
+            std::cout << outputPreamble 
+                      << "Not a valid type, please try again. "
+                      << "If you need to, please see the help menu "
+                      << "for possible task types."
+                      << std::endl;
+        }
+    }
+    return taskType;
+}
 
+/**
+ * @brief Handles the logic for querying the user for a task name.
+ * @return A string representation of the task name in question.
+ */
+std::string QueryHelper::queryTaskName() {
+    std::string taskName;
+    bool validName = false;
+    while (!validName) {
+        std::cout << outputPreamble << "Enter a task name: ";
+        std::getline(std::cin, taskName);
+        validName = isValidTaskName(taskName);
+        if (!validName) {
+            std::cout << outputPreamble
+                      << "Not a valid name, please try again. "
+                      << "A name must be a non zero string that isn't "
+                      << "already taken as a task name in the group." 
+                      << std::endl;
+        }
+    }
+    return taskName;
+}
 
-//==============================
-//========== Utility ===========
-//==============================
+/**
+ * @brief Handles the logic for querying the user for a task date.
+ * @return A string representation of the task date in question.
+ */
+std::string QueryHelper::queryTaskDate() {
+    std::string taskDate;
+    bool validDate = false;
+    while (!validDate) {
+        std::cout << outputPreamble << "Enter a task date (MM/DD/YYYY): ";
+        std::getline(std::cin, taskDate);
+        validDate = isValidDate(taskDate);
+        if (!validDate) {
+            std::cout << outputPreamble
+                      << "Not a valid date, please try again. "
+                      << "A date must be formatted as (MM/DD/YYYY)."
+                      << std::endl;
+        }
+    }
+    return taskDate;
+}
+
 
 
 /**
@@ -188,10 +245,8 @@ std::string QueryHelper::queryRemAllGroups() {
  * type in question is valid.
  */
 bool QueryHelper::isValidGroupType(const std::string& groupType) {
-    return groupType == "Class" ||
-            groupType == "DevWork" ||
-            groupType == "Research" ||
-            groupType == "SelfStudy";
+    return groupType == "Class" || groupType == "DevWork" ||
+        groupType == "Research" || groupType == "SelfStudy";
 }
 
 /**
@@ -213,15 +268,9 @@ bool QueryHelper::isValidGroupName(const std::string& groupName) {
  * year in question is valid.
  */
 bool QueryHelper::isValidGroupYear(uint16_t groupYear) {
-    const std::chrono::time_point now{
-        std::chrono::system_clock::now()
-    };
-    const std::chrono::year_month_day ymd{
-        std::chrono::floor<std::chrono::days>(now)
-    };
-    uint16_t currentYear = static_cast<uint16_t>(
-            static_cast<int>(ymd.year())
-        );
+    std::string today = getTodaysDateStr();
+    int y = std::stoi(today.substr(6, 4));
+    uint16_t currentYear = static_cast<uint16_t>(y);
     return groupYear >= currentYear - 10 && 
         groupYear <= currentYear + 10;
 }
@@ -234,8 +283,7 @@ bool QueryHelper::isValidGroupYear(uint16_t groupYear) {
  * Semester in question is valid.
  */
 bool QueryHelper::isValidSemester(const std::string& semester) {
-    return semester == "Spring" ||
-        semester == "Fall" ||
+    return semester == "Spring" || semester == "Fall" ||
         semester == "Summer";
 }
 
@@ -243,15 +291,118 @@ bool QueryHelper::isValidSemester(const std::string& semester) {
  * @brief Checks whether or not a given group Topic is valid.
  * @param topic A string representation of the group Topic
  * in question.
- * @ return A boolean representation of whether or not the group
+ * @return A boolean representation of whether or not the group
  * Topic in question is valid.
  */
 bool QueryHelper::isValidTopic(const std::string& topic) {
-    return topic == "Math" ||
-        topic == "CS" ||
-        topic == "Physics" ||
-        topic == "Chemistry" ||
+    return topic == "Math" || topic == "CS" ||
+        topic == "Physics" || topic == "Chemistry" ||
         topic == "Biology";
+}
+
+/**
+ * @brief Checks whether or not a given task type is valid.
+ * @param taskType A string representation of the task
+ * type in question.
+ * @return A boolean representation of whether or not the task
+ * type in question is valid.
+ */
+bool QueryHelper::isValidTaskType(const std::string& taskType) {
+    return taskType == "Chore" || taskType == "Exam" ||
+        taskType == "Homework" || taskType == "Lab" ||
+        taskType == "LabAssignment" || taskType == "Notes" ||
+        taskType == "Presentation" || taskType == "Programming" ||
+        taskType == "Project" || taskType == "Quiz" ||
+        taskType == "Reading";
+}
+
+/**
+ * @brief Checks whether or not a given task name is valid.
+ * @param taskName A string representation of the task
+ * name in question.
+ * @return A boolean representation of whether or not the task
+ * name in question is valid.
+ */
+bool QueryHelper::isValidTaskName(const std::string& taskName) {
+    return taskName.length();
+}
+
+/**
+ * @brief Checks whether or not a given date is valid
+ * with regards to an American format.
+ * @param date The given date in question.
+ * @return A boolean representation of whether or not the
+ * date in question is valid.
+ */
+bool QueryHelper::isValidDate(const std::string& date) {
+    try {
+        // Must be in MM/DD/YYYY format
+        if (date.length() != 10 || date[2] != '/' || date[5] != '/')
+            return false;
+        
+        int d = std::stoi(date.substr(3, 2));
+        int m = std::stoi(date.substr(0, 2));
+        int y = std::stoi(date.substr(6, 4));
+        int dayThreshold;
+        
+        // Months with 31 days
+        if (m == 1 || m == 3 || m == 5 || 
+                m == 7 || m == 8 || m == 10 || m == 12) {
+            dayThreshold = 31;
+        // Months with 30 days
+        } else if (m == 4 || m == 6 || m == 9 || m == 11) {
+            dayThreshold = 30;
+        // Februrary
+        } else if (m == 2) {
+            if ((y % 4 == 0 && y % 100 != 0) || (y % 400 == 0)) dayThreshold = 29;
+            else dayThreshold = 28;
+        } else {
+            return false;
+        }
+
+        return d <= dayThreshold && d > 0 && y > 0;
+    } catch (...) {
+        return false;
+    }
+}
+
+/**
+ * @brief Checks whether or not a given task date is valid
+ * in relation to the date1 flag.
+ * @param date The given task date in question.
+ * @return A boolean representation of whether or not the
+ * task date in question is valid.
+ */
+bool QueryHelper::isValidTaskDate1(const std::string& date) {
+    std::string today = getTodaysDateStr();
+    std::string expectedDay = addDaysToDate(today, 10);
+    return isDateInRange(date, today, expectedDay);
+}
+
+/**
+ * @brief Checks whether or not a given task date is valid
+ * in relation to the date2 flag.
+ * @param date The given task date in question.
+ * @return A boolean representation of whether or not the
+ * task date in question is valid.
+ */
+bool QueryHelper::isValidTaskDate2(const std::string& date) {
+    std::string today = getTodaysDateStr();
+    std::string expectedDay = addDaysToDate(today, 30);
+    return isDateInRange(date, today, expectedDay);
+}
+
+/**
+ * @brief Checks whether or not a given task date is valid
+ * in relation to the date3 flag.
+ * @param date The given task date in question.
+ * @return A boolean representation of whether or not the
+ * task date in question is valid.
+ */
+bool QueryHelper::isValidTaskDate3(const std::string& date) {
+    std::string today = getTodaysDateStr();
+    std::string expectedDay = addDaysToDate(today, 90);
+    return isDateInRange(date, today, expectedDay);
 }
 
 /**
@@ -361,15 +512,10 @@ std::string QueryHelper::translateTaskType(const std::string& taskType) {
 std::string QueryHelper::translateSemester(const std::string& semester) {
     std::string lowerStr = strToLower(semester);
 
-    if (lowerStr == "spring") {
-        return "Spring";
-    } else if (lowerStr == "fall") {
-        return "Fall";
-    } else if (lowerStr == "summer") {
-        return "Summer";
-    } else {
-        return semester;
-    }
+    if (lowerStr == "spring") return "Spring";
+    else if (lowerStr == "fall") return "Fall";
+    else if (lowerStr == "summer") return "Summer";
+    else return semester;
 }
 
 /**
@@ -412,15 +558,10 @@ std::string QueryHelper::translateTopic(const std::string& topic) {
  * @return The Semester object in question.
  */
 Semester QueryHelper::strToSemester(const std::string& semester) {
-    if (semester == "Spring") {
-        return Semester::SPRING;
-    } else if (semester == "Fall") {
-        return Semester::FALL;
-    } else if (semester == "Summer") {
-        return Semester::SUMMER;
-    } else {
-        throw std::invalid_argument("Unknown semester value");
-    }
+    if (semester == "Spring") return Semester::SPRING;
+    else if (semester == "Fall") return Semester::FALL;
+    else if (semester == "Summer") return Semester::SUMMER;
+    else throw std::invalid_argument("Unknown semester value");
 }
 
 /**
@@ -429,19 +570,12 @@ Semester QueryHelper::strToSemester(const std::string& semester) {
  * @return The Topic object in question.
  */
 Topic QueryHelper::strToTopic(const std::string& topic) {
-    if (topic == "Math") {
-        return Topic::MATH;
-    } else if (topic == "CS") {
-        return Topic::CS;
-    } else if (topic == "Physics") {
-        return Topic::PHYSICS;
-    } else if (topic == "Chemistry") {
-        return Topic::CHEM;
-    } else if (topic == "Biology") {
-        return Topic::BIO;
-    } else {
-        throw std::invalid_argument("Unknown topic value");
-    }
+    if (topic == "Math") return Topic::MATH;
+    else if (topic == "CS") return Topic::CS;
+    else if (topic == "Physics") return Topic::PHYSICS;
+    else if (topic == "Chemistry") return Topic::CHEM;
+    else if (topic == "Biology") return Topic::BIO;
+    else throw std::invalid_argument("Unknown topic value");
 }
 
 /**
@@ -452,13 +586,103 @@ Topic QueryHelper::strToTopic(const std::string& topic) {
  */
 std::string QueryHelper::translateYesNo(const std::string& str) {
     std::string lowerStr = strToLower(str);
-    if (lowerStr == "y" || lowerStr == "yes") {
-        return "y";
-    } else if (lowerStr == "n" || lowerStr == "no") {
-        return "n";
-    } else {
-        return str;
+    if (lowerStr == "y" || lowerStr == "yes") return "y";
+    else if (lowerStr == "n" || lowerStr == "no") return "n";
+    else return str;
+}
+
+/**
+ * @brief Adds a number of days to given date string to help
+ * with date validty checker functions.
+ * @param date
+ */
+std::string QueryHelper::addDaysToDate(const std::string& date, int days) {
+    // MM/DD/YYYY
+    int d = std::stoi(date.substr(3, 2));
+    int m = std::stoi(date.substr(0, 2));
+    int y = std::stoi(date.substr(6, 4));
+    d += days;
+
+    while (true) {
+        bool leap = (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0);
+        int daysInMonth;
+        if (m == 2) daysInMonth = leap ? 29 : 28;
+        else if (m == 4 || m == 6 || m == 9 || m == 11) daysInMonth = 30;
+        else daysInMonth = 31;
+
+        if (d <= daysInMonth) break;
+        d -= daysInMonth;
+        m++;
+
+        if (m > 12) {
+            m = 1;
+            y++;
+        }
     }
+
+    return buildDateStr(d, m, y);
+}
+
+/**
+ * @brief Transforms a set of integers into a date string in order
+ * to reduce on repeated code in the class. This string is currently
+ * built in an American format (may change later).
+ * @param day The day integer.
+ * @param month The month integer.
+ * @param year The year integer.
+ * @return The date string in American format.
+ */
+std::string QueryHelper::buildDateStr(int day, int month, int year) {
+    return std::to_string(month) + "/"
+            + std::to_string(day) + "/"
+            + std::to_string(year);
+}
+
+/**
+ * @brief Gets the current date in a nice formatted string,
+ * using the American time format.
+ * @return The date in question as a string.
+ */
+std::string QueryHelper::getTodaysDateStr() {
+    using namespace std::chrono;
+    auto today = floor<days>(system_clock::now());
+    year_month_day ymd = year_month_day{today};
+    return std::format(
+            "{:02}/{:02}/{:04}",
+            unsigned(ymd.month()),
+            unsigned(ymd.day()),
+            int(ymd.year()));
+}
+
+/**
+ * @brief Checks whether or not a given date is a range between
+ * two other given dates inclusively (expects the dates to be valid).
+ * @param date The date in question.
+ * @param lower The lower bound as a date for the range.
+ * @param upper The upper bound as a date for the range.
+ * @return A boolean representation of whether or not the date
+ * in question is in between the range of dates given.
+ */
+bool QueryHelper::isDateInRange(const std::string& date, 
+        const std::string& lower, const std::string& upper) {
+
+    int d = std::stoi(date.substr(3, 2));
+    int m = std::stoi(date.substr(0, 2));
+    int y = std::stoi(date.substr(6, 4));
+    int lD = std::stoi(lower.substr(3, 2));
+    int lM = std::stoi(lower.substr(0, 2));
+    int lY = std::stoi(lower.substr(6, 4));
+    int uD = std::stoi(upper.substr(3, 2));
+    int uM = std::stoi(upper.substr(0, 2));
+    int uY = std::stoi(upper.substr(6, 4));
+
+    // Apparently tuples compare from left to right
+    // which tells us if the date is in the range
+    std::tuple dateTup  = std::make_tuple(y, m, d);
+    std::tuple lowerTup = std::make_tuple(lY, lM, lD);
+    std::tuple upperTup = std::make_tuple(uY, uM, uD);
+
+    return dateTup >= lowerTup && dateTup <= upperTup;
 }
 
 /**

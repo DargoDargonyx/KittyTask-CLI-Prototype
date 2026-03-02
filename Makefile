@@ -11,7 +11,7 @@ SRC = $(wildcard $(SRC_DIR)/*.cpp) \
 	$(wildcard $(SRC_DIR)/util/*.cpp) 
 
 OBJ = $(SRC:$(SRC_DIR)/%.cpp=$(BIN_DIR)/%.o)
-TARGET = kitty_tracker
+TARGET = kitty_task
 
 all: $(TARGET)
 

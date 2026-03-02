@@ -59,14 +59,10 @@ std::string Group::getType() const {
  * task in question was in the tasks field.
  */
 bool Group::containsTask(const std::string& taskName) {
-    bool containsTask = false;
     for (int i = 0; i < static_cast<int>(tasks.size()); i++) {
-        if (tasks.at(i)->getName() == taskName) {
-            containsTask = true;
-            break;
-        }
+        if (tasks.at(i)->getName() == taskName) return true;
     }
-    return containsTask;
+    return false;
 }
 
 /**
