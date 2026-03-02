@@ -438,12 +438,13 @@ int main(int argc, char **argv) {
             
         for (int i = static_cast<int>(toRemove.size()) - 1; i >= 0; i--) {
             int groupId = toRemove.at(i);
+            std::string groupName = manager.getGroupFromId(groupId)->getName();
+            manager.removeGroup(groupId);
             std::cout << outputPreamble
                       << "Removed group \""
-                      << manager.getGroupFromId(groupId)->getName()
+                      << groupName
                       << "\""
                       << std::endl;
-            manager.removeGroup(groupId);
         }
     });
     

@@ -23,6 +23,7 @@ $(BIN_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(BIN_DIR)/*.o $(TARGET)
+	rm -rf $(TARGET) $(BIN_DIR)/*.o $(BIN_DIR)/groups/*.o \
+		$(BIN_DIR)/tasks/*.o $(BIN_DIR)/util/*.o
 
 .PHONY: all clean

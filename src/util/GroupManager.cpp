@@ -26,6 +26,7 @@
 #include <iostream>
 #include <fstream>
 #include <filesystem>
+#include <stdexcept>
 
 using json = nlohmann::json;
 namespace fs = std::filesystem;
@@ -51,50 +52,16 @@ void GroupManager::setGroups(std::vector<std::unique_ptr<Group>>&& newGroups) {
 }
 
 void GroupManager::addGroup(std::unique_ptr<Group> newGroup) {
-
-    if (newGroup->getIdNum() != static_cast<int>(groups.size())) {
-        newGroup->setIdNum(static_cast<int>(groups.size()));
-    }
-
-    int idNum = newGroup->getIdNum();
-    std::string type = newGroup->getType();
-    data[idNum]["name"] = newGroup->getName();
-    data[idNum]["type"] = type;
-
-    if (type == "Class") {
-        Class* cGroup = static_cast<Class*>(newGroup.get());
-        data[idNum]["year"] = cGroup->getYear();
-        data[idNum]["semester"] = cGroup->getSemesterStr();
-        data[idNum]["topic"] = cGroup->getTopicStr();
-        data[idNum]["grade"] = cGroup->getGrade();
-    } else if (type == "DevWork") {
-        DevWork* dGroup = static_cast<DevWork*>(newGroup.get());
-        data[idNum]["year"] = dGroup->getYear();
-        data[idNum]["topic"] = dGroup->getTopicStr();
-    } else if (type == "Research") {
-        Research* rGroup = static_cast<Research*>(newGroup.get());
-        data[idNum]["year"] = rGroup->getYear();
-        data[idNum]["semester"] = rGroup->getSemesterStr();
-        data[idNum]["topic"] = rGroup->getTopicStr();
-    } else if (type == "SelfStudy") {
-        SelfStudy* sGroup = static_cast<SelfStudy*>(newGroup.get());
-        data[idNum]["year"] = sGroup->getYear();
-        data[idNum]["semester"] = sGroup->getSemesterStr();
-        data[idNum]["topic"] = sGroup->getTopicStr();
-    }
     groups.push_back(std::move(newGroup));
+    refreshGroups();
     saveGroupData();
 }
 
 void GroupManager::removeGroup(const int groupId) {
-    for (int i = 0; i < static_cast<int>(groups.size()); i++) {
-        if (groups.at(i)->getIdNum() == groupId) {
-            groups.erase(groups.begin() + i);
-            data.erase(i);
-            break;
-        }
-    }
+    groups.erase(groups.begin() + groupId);
+    data.erase(data.begin() + groupId);
     refreshGroups();
+    saveGroupData();
 }
 
 void GroupManager::clearAllGroups() {
@@ -135,34 +102,44 @@ Group* GroupManager::getGroupFromName(const std::string& groupName) {
 void GroupManager::refreshGroups() {
     for (int i = 0; i < static_cast<int>(groups.size()); i++) {
         groups.at(i)->setIdNum(i);
-        std::string type = groups.at(i)->getType();
-        data[i]["name"] = groups.at(i)->getName();
-        data[i]["type"] = type;
-
-        if (type == "Class") {
-            Class* cGroup = static_cast<Class*>(groups.at(i).get());
-            data[i]["year"] = cGroup->getYear();
-            data[i]["semester"] = cGroup->getSemesterStr();
-            data[i]["topic"] = cGroup->getTopicStr();
-            data[i]["grade"] = cGroup->getGrade();
-        } else if (type == "DevWork") {
-            DevWork* dGroup = static_cast<DevWork*>(groups.at(i).get());
-            data[i]["year"] = dGroup->getYear();
-            data[i]["topic"] = dGroup->getTopicStr();
-        } else if (type == "Research") {
-            Research* rGroup = static_cast<Research*>(groups.at(i).get());
-            data[i]["year"] = rGroup->getYear();
-            data[i]["semester"] = rGroup->getSemesterStr();
-            data[i]["topic"] = rGroup->getTopicStr();
-        } else if (type == "SelfStudy") {
-            SelfStudy* sGroup = static_cast<SelfStudy*>(groups.at(i).get());
-            data[i]["year"] = sGroup->getYear();
-            data[i]["semester"] = sGroup->getSemesterStr();
-            data[i]["topic"] = sGroup->getTopicStr();
-        }
     }
     saveGroupData();
 }
+
+
+
+void GroupManager::addTask(
+        const std::string& groupName, 
+        std::unique_ptr<Task> newTask) {
+
+    Group* group = getGroupFromName(groupName);
+    group->addTask(std::move(newTask));
+    saveGroupData();
+}
+
+void GroupManager::removeTask(
+        const std::string& groupName, 
+        const int taskId) {
+
+    Group* group = getGroupFromName(groupName);
+    group->removeTask(taskId);
+    saveGroupData();
+}
+
+void GroupManager::clearAllTasks(const std::string& groupName) {
+    Group* group = getGroupFromName(groupName);
+    group->clearAllTasks();
+    saveGroupData();
+}
+
+bool GroupManager::containsTask(
+        const std::string& groupName, 
+        const std::string& taskName) {
+
+    Group* group = getGroupFromName(groupName);
+    return group->containsTask(taskName);
+}
+
 
 
 void GroupManager::checkDataDirectory() {
@@ -217,32 +194,98 @@ void GroupManager::loadGroupData() {
                 + idStr
                 + "_tasks.json";
         
-        std::ifstream taskfileStream(filename);
+        std::ifstream taskInFile(filename);
         json taskfile;
-        if (taskfileStream.is_open()) {
-            taskfile = json::parse(taskfileStream);
+        if (taskInFile.is_open()) {
+            taskfile = json::parse(taskInFile);
         }
-        taskfileStream.close();       
+        taskInFile.close();
         
         for (int j = 0; j < static_cast<int>(taskfile.size()); j++) {
             group->addTask(buildTask(taskfile, j));
         }
-        group->refreshTaskIdList();
         groups.push_back(std::move(group));
     }
 }
 
 void GroupManager::saveGroupData() {
+    for (int i = 0; i < static_cast<int>(groups.size()); i++) {
+        Group* group = groups.at(i).get();
+        
+        std::string groupType = group->getType();
+        data[i]["name"] = group->getName();
+        data[i]["type"] = groupType;
 
-    std::ofstream file(filepath + "groupData.json");
-    if (file.is_open()) {
-        file << std::setw(4) << data << std::endl;
+        if (groupType == "Class") {
+            Class* cGroup = static_cast<Class*>(group);
+            data[i]["year"] = cGroup->getYear();
+            data[i]["semester"] = cGroup->getSemesterStr();
+            data[i]["topic"] = cGroup->getTopicStr();
+            data[i]["grade"] = cGroup->getGrade();
+        } else if (groupType == "DevWork") {
+            DevWork* dGroup = static_cast<DevWork*>(group);
+            data[i]["year"] = dGroup->getYear();
+            data[i]["topic"] = dGroup->getTopicStr();
+        } else if (groupType == "Research") {
+            Research* rGroup = static_cast<Research*>(group);
+            data[i]["year"] = rGroup->getYear();
+            data[i]["semester"] = rGroup->getSemesterStr();
+            data[i]["topic"] = rGroup->getTopicStr();
+        } else if (groupType == "SelfStudy") {
+            SelfStudy* sGroup = static_cast<SelfStudy*>(group);
+            data[i]["year"] = sGroup->getYear();
+            data[i]["semester"] = sGroup->getSemesterStr();
+            data[i]["topic"] = sGroup->getTopicStr();
+        }
+
+        std::string idStr = std::to_string(i);
+        std::string filename = filepath
+                + "tasks/group"
+                + idStr
+                + "_tasks.json";
+        std::ifstream taskInFile(filename);
+        json taskfile;
+        if (taskInFile.is_open()) {
+            taskfile = json::parse(taskInFile);
+        }
+        taskInFile.close();       
+
+        const std::vector<std::unique_ptr<Task>>& tasks = group->getTasks();
+        for (int j = 0; j < static_cast<int>(tasks.size()); j++) {
+            Task* task = tasks.at(j).get();
+
+            std::string taskType = task->getType();
+            taskfile[j]["name"] = task->getName();
+            taskfile[j]["date"] = task->getDate();
+            taskfile[j]["status"] = task->getStatus();
+            taskfile[j]["type"] = taskType;
+
+            if (taskType != "Chore") {
+                GradedTask* gradedTask = static_cast<GradedTask*>(task);
+                taskfile[j]["grade"] = gradedTask->getGrade();
+            }
+        }
+
+        std::ofstream taskOutFile(filename);
+        if (taskOutFile.is_open()) {
+            taskOutFile << std::setw(4) << taskfile << std::endl;
+        } else {
+            std::cerr << outputPreamble
+                      << "ERROR when trying to write to groupData.json file"
+                      << std::endl;
+        }
+        taskOutFile.close();
+    }
+
+    std::ofstream groupOutFile(filepath + "groupData.json");
+    if (groupOutFile.is_open()) {
+        groupOutFile << std::setw(4) << data << std::endl;
     } else {
         std::cerr << outputPreamble
                   << "ERROR when trying to write to groupData.json file"
                   << std::endl;
     }
-    file.close();
+    groupOutFile.close();
 }
 
 

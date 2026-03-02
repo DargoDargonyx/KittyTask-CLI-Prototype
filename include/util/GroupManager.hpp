@@ -40,6 +40,10 @@ class GroupManager {
         bool containsGroup(const std::string& groupName);
         Group* getGroupFromId(const int groupId);
         Group* getGroupFromName(const std::string& groupName);
+        void addTask(const std::string& groupName, std::unique_ptr<Task> newTask);
+        void removeTask(const std::string& groupName, const int taskId);
+        void clearAllTasks(const std::string& groupName);
+        bool containsTask(const std::string& groupName, const std::string& taskName);
 };
 
 #endif //GROUPMANAGER_H
