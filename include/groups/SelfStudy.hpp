@@ -1,19 +1,26 @@
 #ifndef SELFSTUDY_H
 #define SELFSTUDY_H
 
+// Group header file
 #include "groups/Group.hpp"
-#include "tasks/Task.hpp"
+
+// Utility header files
 #include "util/Semester.hpp"
 #include "util/Topic.hpp"
+
+// Built in libraries
 #include <string>
 #include <cstdint>
 
+
 class SelfStudy : public Group {
     private:
+        // Fields
         uint16_t year;
         Semester semester;
         Topic topic;
     public:
+        // Constructor
         SelfStudy(
             int idNum, 
             const std::string& name,
@@ -21,13 +28,15 @@ class SelfStudy : public Group {
             const Semester& semester, 
             const Topic& topic
         );
+        // Accessors
         uint16_t getYear() const;
-        void setYear(uint16_t year);
         Semester getSemester() const;
         std::string getSemesterStr() const;
-        void setSemester(const Semester& semester);
         Topic getTopic() const;
         std::string getTopicStr() const;
+        // Mutators
+        void setYear(uint16_t year);
+        void setSemester(const Semester& semester);
         void setTopic(const Topic& topic);
 };
 

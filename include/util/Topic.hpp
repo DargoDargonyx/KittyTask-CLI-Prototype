@@ -1,6 +1,7 @@
 #ifndef TOPIC_H
 #define TOPIC_H
 
+// Topic Enum
 enum Topic { 
     MATH, 
     CS, 

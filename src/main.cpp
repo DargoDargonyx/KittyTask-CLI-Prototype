@@ -1,15 +1,11 @@
-#include "external/CLI11.hpp"
-#include "util/GroupManager.hpp"
-#include "util/QueryHelper.hpp"
-#include "util/Semester.hpp"
-#include "util/Topic.hpp"
-
+// Group header files
 #include "groups/Group.hpp"
 #include "groups/Class.hpp"
 #include "groups/DevWork.hpp"
 #include "groups/Research.hpp"
 #include "groups/SelfStudy.hpp"
 
+// Task header files
 #include "tasks/Task.hpp"
 #include "tasks/Chore.hpp"
 #include "tasks/Exam.hpp"
@@ -23,13 +19,23 @@
 #include "tasks/Quiz.hpp"
 #include "tasks/Reading.hpp"
 
+// Utility & External header files
+#include "util/GroupManager.hpp"
+#include "util/QueryHelper.hpp"
+#include "util/Semester.hpp"
+#include "util/Topic.hpp"
+#include "external/CLI11.hpp"
+
+// Built in libraries
 #include <iostream>
 #include <string>
 #include <vector>
 #include <memory>
 
 
-
+/**
+ * @brief The main function of the entire project.
+ */
 int main(int argc, char **argv) {
     const std::string outputPreamble = "{KittyTask} ";
     const std::string filepath = "data/";

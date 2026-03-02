@@ -1,28 +1,37 @@
 #ifndef QUERYHELPER_H
 #define QUERYHELPER_H
 
+// Utility header files
 #include "util/Semester.hpp"
 #include "util/Topic.hpp"
+
+// Built in libraries
 #include <string>
 #include <cstdint>
 
+
 class QueryHelper {
     private:
+        // Fields
         std::string outputPreamble;
+        // Utility
         bool isValidGroupName(const std::string& groupName);
         bool isValidGroupYear(uint16_t groupType);
         bool isValidYesNo(const std::string& str);
         std::string strToLower(const std::string& str);
         std::string translateYesNo(const std::string& str);
     public:
+        // Constructor
         QueryHelper(
             const std::string& outputPreamble);
+        // Queries
         std::string queryGroupType();
         std::string queryGroupName();
         uint16_t queryGroupYear();
         std::string queryGroupSemester();
         std::string queryGroupTopic();
         std::string queryRemAllGroups();
+        // Utility
         bool isValidGroupType(const std::string& groupType);
         bool isValidSemester(const std::string& semester);
         bool isValidTopic(const std::string& topic);
