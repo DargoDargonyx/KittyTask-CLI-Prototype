@@ -29,8 +29,7 @@ class QueryHelper {
                 const std::string& lower, const std::string& upper);
     public:
         // Constructor
-        QueryHelper(
-            const std::string& outputPreamble);
+        QueryHelper(const std::string& outputPreamble);
         // Queries
         std::string queryGroupType();
         std::string queryGroupName();
