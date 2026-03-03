@@ -37,10 +37,6 @@ namespace fs = std::filesystem;
 
 
 
-//==================================
-//========== Constructor ===========
-//==================================
-
 /**
  * @brief Two argument constructor for the class.
  *
@@ -58,10 +54,6 @@ GroupManager::GroupManager(
 }
 
 
-
-//==================================
-//========== IO Handling ===========
-//==================================
 
 /**
  * @brief Ensures that the data directory exists and that it
@@ -167,7 +159,7 @@ void GroupManager::saveGroupData() {
         if (taskInFile.is_open()) {
             taskfile = json::parse(taskInFile);
         }
-        taskInFile.close();       
+        taskInFile.close();      
 
         const std::vector<std::unique_ptr<Task>>& tasks = group->getTasks();
         for (int j = 0; j < static_cast<int>(tasks.size()); j++) {
@@ -190,7 +182,7 @@ void GroupManager::saveGroupData() {
             taskOutFile << std::setw(4) << taskfile << std::endl;
         } else {
             std::cerr << outputPreamble
-                      << "ERROR when trying to write to groupData.json file"
+                      << "ERROR when trying to write to group task file"
                       << std::endl;
         }
         taskOutFile.close();
@@ -207,11 +199,6 @@ void GroupManager::saveGroupData() {
     groupOutFile.close();
 }
 
-
-
-//==================================================
-//========== Translating JSON to objects ===========
-//==================================================
 
 
 /**
@@ -451,11 +438,6 @@ void GroupManager::refreshGroups() {
 
 
 
-//================================
-//========== Accessors ===========
-//================================
-
-
 /**
  * @brief An accessor for the groups field.
  * @return A reference to the groups field.
@@ -518,6 +500,21 @@ Group* GroupManager::getGroupFromName(const std::string& groupName) {
 }
 
 /**
+ * @brief Returns a pointer to a task when given the idNum of
+ * the task and the name of the group it's in.
+ * @param groupName The name of the group the task in question
+ * is associated with.
+ * @param taskId The idNum of the task in question.
+ * @return A pointer to the task in question.
+ */
+Task* GroupManager::getTaskFromId(const std::string& groupName, 
+        const int taskId) {
+
+    Group* group = getGroupFromName(groupName);
+    return group->getTaskFromId(taskId);
+}
+
+/**
  * @brief Handles the logic for checking whether or not a given
  * group contains a specific task.
  * @param groupName The name of the group in question.
@@ -532,13 +529,6 @@ bool GroupManager::containsTask(
     Group* group = getGroupFromName(groupName);
     return group->containsTask(taskName);
 }
-
-
-
-//===============================
-//========== Mutators ===========
-//===============================
-
 
 /**
  * @brief A mutator for the groups field.
@@ -565,6 +555,9 @@ void GroupManager::addGroup(std::unique_ptr<Group> newGroup) {
 void GroupManager::removeGroup(const int groupId) {
     groups.erase(groups.begin() + groupId);
     data.erase(data.begin() + groupId);
+    int lastGroupId = static_cast<int>(groups.size()) - 1;
+    fs::remove(filepath + "/tasks/group" 
+            + std::to_string(lastGroupId) + "_tasks.json");
     refreshGroups();
     saveGroupData();
 }
@@ -603,7 +596,29 @@ void GroupManager::removeTask(
 
     Group* group = getGroupFromName(groupName);
     group->removeTask(taskId);
-    saveGroupData();
+
+    int groupId = group->getIdNum();
+    std::string idStr = std::to_string(groupId);
+    std::string filename = filepath + "tasks/group"
+                            + idStr + "_tasks.json";
+    std::ifstream taskInFile(filename);
+    json taskfile;
+    if (taskInFile.is_open()) {
+        taskfile = json::parse(taskInFile);
+    }
+    taskInFile.close();
+
+    taskfile.erase(taskfile.begin() + taskId);
+    
+    std::ofstream taskOutFile(filename);
+    if (taskOutFile.is_open()) {
+        taskOutFile << std::setw(4) << taskfile << std::endl;
+    } else {
+        std::cerr << outputPreamble
+                  << "ERROR when trying to write to " << filename
+                  << std::endl;
+    }
+    taskOutFile.close();
 }
 
 /**
@@ -613,5 +628,19 @@ void GroupManager::removeTask(
 void GroupManager::clearAllTasks(const std::string& groupName) {
     Group* group = getGroupFromName(groupName);
     group->clearAllTasks();
-    saveGroupData();
+   
+    int groupId = group->getIdNum();
+    std::string idStr = std::to_string(groupId);
+    std::string filename = filepath + "tasks/group"
+                            + idStr + "_tasks.json";
+    json taskfile;
+    std::ofstream taskOutFile(filename);
+    if (taskOutFile.is_open()) {
+        taskOutFile << std::setw(4) << taskfile << std::endl;
+    } else {
+        std::cerr << outputPreamble
+                  << "ERROR when trying to write to " << filename
+                  << std::endl;
+    }
+    taskOutFile.close();
 }

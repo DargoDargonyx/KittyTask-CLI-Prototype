@@ -46,6 +46,7 @@ class GroupManager {
         const std::vector<std::unique_ptr<Task>>& getTasks(const std::string& groupName);
         Group* getGroupFromId(const int groupId);
         Group* getGroupFromName(const std::string& groupName);
+        Task* getTaskFromId(const std::string& groupName, const int taskId);
         bool containsGroup(const std::string& groupName);
         bool containsTask(const std::string& groupName, const std::string& taskName);
         // Mutators

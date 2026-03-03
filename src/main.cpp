@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
 
 
     CLI::App* remGroup = app.add_subcommand(
-            "remGroup",
+            "removeGroup",
             "Remove a group from the current groups"
     );
 
@@ -171,6 +171,48 @@ int main(int argc, char **argv) {
     });
 
 
+
+    CLI::App* removeTask = app.add_subcommand("removeTask", "Remove a task from a group");
+    std::string removeTaskGroupName;
+    removeTask->add_option(
+        "-G, --group",
+        removeTaskGroupName,
+        "A specific group that the task gets removed from"
+    )->required();
+    std::string filterRemoveTaskTaskName;
+    removeTask->add_option(
+        "-n, --name",
+        filterRemoveTaskTaskName,
+        "Remove a task by name in the given group"
+    );
+    std::string filterRemoveTaskType;
+    removeTask->add_option(
+        "-t, --type",
+        filterRemoveTaskType,
+        "Remove a task by task type in the given group"
+    );
+    bool filterRemoveTaskAll = false;
+    removeTask->add_flag(
+        "-a, --all",
+        filterRemoveTaskAll,
+        "Remove all tasks in the given group"
+    );
+    bool filterRemoveTaskStatus = false;
+    removeTask->add_flag(
+        "-s, --status",
+        filterRemoveTaskStatus,
+        "Remove all tasks that are marked complete"
+    );
+
+    removeTask->callback([&]() {
+        cmdHelper->removeTaskCommand(
+            removeTaskGroupName,
+            filterRemoveTaskTaskName,
+            filterRemoveTaskType,
+            filterRemoveTaskAll,
+            filterRemoveTaskStatus
+        );
+    });
 
     CLI11_PARSE(app, argc, argv);
     return 0;

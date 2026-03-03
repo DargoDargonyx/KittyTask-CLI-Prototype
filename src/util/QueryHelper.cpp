@@ -148,25 +148,43 @@ std::string QueryHelper::queryGroupTopic() {
 /**
  * @brief Handles the logic for querying the user on whether or not
  * they actually want to remove all groups.
- * @return A string representation of "y" for yes and "n" for no of
- * whether or not the user wants to remove all groups.
+ * @return A boolean representation of the users response where true
+ * means yes and false means no.
  */
-std::string QueryHelper::queryRemAllGroups() {
+bool QueryHelper::queryRemAllGroups() {
     std::string response;
-    bool validResponse = false;
-    while (!validResponse) {
+    while (true) {
         std::cout << outputPreamble
                   << "Are you sure that you want to remove all groups? (y/n): ";
         std::getline(std::cin, response);
         response = translateYesNo(response);
-        validResponse = isValidYesNo(response);
-        if (!validResponse) {
-            std::cout << outputPreamble
-                      << "Not a valid response, please try again."
-                      << std::endl;
-        }
+        if (response == "y") return true;
+        else if (response == "n") return false;
+        std::cout << outputPreamble
+                  << "Not a valid response, please try again."
+                  << std::endl;
     }
-    return response;
+}
+
+/**
+ * @brief Handles the logic for querying the user on whether or not
+ * they actually want to remove all tasks in a group.
+ * @return A boolean representation of the users response where true
+ * means yes and false means no.
+ */
+bool QueryHelper::queryRemAllTasks() {
+    std::string response;
+    while (true) {
+        std::cout << outputPreamble
+                  << "Are you sure that you want to remove all tasks? (y/n): ";
+        std::getline(std::cin, response);
+        response = translateYesNo(response);
+        if (response == "y") return true;
+        else if (response == "n") return false;
+        std::cout << outputPreamble
+                  << "Not a valid response, please try again."
+                  << std::endl;
+    }
 }
 
 /**
@@ -403,16 +421,6 @@ bool QueryHelper::isValidTaskDate3(const std::string& date) {
     std::string today = getTodaysDateStr();
     std::string expectedDay = addDaysToDate(today, 90);
     return isDateInRange(date, today, expectedDay);
-}
-
-/**
- * @brief Checks whether or not a given input is a valid yes or no.
- * @param str The given input in question.
- * @return A boolean representation of whether or not the given input
- * in question is valid.
- */
-bool QueryHelper::isValidYesNo(const std::string& str) {
-    return str == "y" || str == "n";
 }
 
 /**

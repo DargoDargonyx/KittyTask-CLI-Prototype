@@ -19,7 +19,6 @@ class QueryHelper {
         bool isValidGroupYear(uint16_t groupType);
         bool isValidTaskName(const std::string& taskName);
         bool isValidDate(const std::string& date);
-        bool isValidYesNo(const std::string& str);
         std::string strToLower(const std::string& str);
         std::string translateYesNo(const std::string& str);
         std::string addDaysToDate(const std::string& date, int days);
@@ -36,10 +35,11 @@ class QueryHelper {
         uint16_t queryGroupYear();
         std::string queryGroupSemester();
         std::string queryGroupTopic();
-        std::string queryRemAllGroups();
+        bool queryRemAllGroups();
         std::string queryTaskType();
         std::string queryTaskName();
         std::string queryTaskDate();
+        bool queryRemAllTasks();
         // Utility
         bool isValidGroupType(const std::string& groupType);
         bool isValidSemester(const std::string& semester);

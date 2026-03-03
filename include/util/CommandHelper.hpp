@@ -43,4 +43,11 @@ class CommandHelper {
             bool date3Flag
         );
         void addTaskCommand(std::string groupName);
+        void removeTaskCommand(
+            std::string groupName,
+            std::string taskName,
+            std::string filterType,
+            bool allFlag,
+            bool statusFlag
+        );
 };

@@ -72,8 +72,7 @@ void CommandHelper::listGroupsCommand(std::string filterType,
         bool validType = qHelper->isValidGroupType(filterType);
         if (!validType) {
             std::cerr << outputPreamble << "ERROR when trying to find type \""
-                      << filterType << "\", please try again."
-                      << std::endl;
+                      << filterType << "\", please try again." << std::endl;
             return;
         }
     } else if (hasFilterSemester) {
@@ -81,8 +80,7 @@ void CommandHelper::listGroupsCommand(std::string filterType,
         bool validSemester = qHelper->isValidSemester(filterSemester);
         if (!validSemester) {
             std::cerr << outputPreamble << "ERROR when trying to find semester \""
-                      << filterSemester << "\", please try again."
-                      << std::endl;
+                      << filterSemester << "\", please try again." << std::endl;
             return;
         }
     } else if (hasFilterTopic) {
@@ -90,13 +88,13 @@ void CommandHelper::listGroupsCommand(std::string filterType,
         bool validTopic = qHelper->isValidTopic(filterTopic);
         if (!validTopic) {
             std::cerr << outputPreamble << "ERROR when trying to find topic \""
-                      << filterTopic << "\", please try again."
-                      << std::endl;
+                      << filterTopic << "\", please try again." << std::endl;
             return;
         }
     }
 
-    int counter = 0;
+    std::vector<std::string> listTypes;
+    std::vector<std::string> listNames;
     for (int i = 0; i < static_cast<int>(groups.size()); i++) {
         const std::unique_ptr<Group>& group = groups.at(i);
         std::string groupType = group->getType();
@@ -115,10 +113,7 @@ void CommandHelper::listGroupsCommand(std::string filterType,
                 if (filterSemester != sGroup->getSemesterStr()) continue;
             }
         } else if (hasFilterTopic) {
-            if (groupType != "Class" && groupType != "DevWork" && 
-                    groupType != "Research" && groupType != "SelfStudy") {
-                continue;
-            } else if (Class* cGroup = dynamic_cast<Class*>(group.get())) {
+            if (Class* cGroup = dynamic_cast<Class*>(group.get())) {
                 if (filterTopic != cGroup->getTopicStr()) continue;
             } else if (DevWork* dGroup = dynamic_cast<DevWork*>(group.get())) {
                 if (filterTopic != dGroup->getTopicStr()) continue;
@@ -129,11 +124,19 @@ void CommandHelper::listGroupsCommand(std::string filterType,
             }
         }
 
-        std::cout << "(" << std::to_string(counter) << ") "
-                  << groupType << ": " << group->getName() 
-                  << std::endl;
-        counter++;
+        listTypes.push_back(groupType);
+        listNames.push_back(group->getName());
     }
+
+    int namesSize = static_cast<int>(listNames.size());
+    if (namesSize > 0) std::cout << "==================== Groups ====================" 
+                                 << std::endl;
+    for (int i = 0; i < namesSize; i++) {
+        std::cout << "(" << i << ") " << listTypes.at(i) 
+                  << ": " << listNames.at(i) << std::endl;
+    }
+    if (namesSize > 0) std::cout << "================================================" 
+                                 << std::endl;
 }
 
 
@@ -151,8 +154,7 @@ void CommandHelper::addGroupCommand() {
         if (!validName) {
             std::cerr << outputPreamble
                       << "Can't add a group with a name that's already "
-                      << "taken, please try again."
-                      << std::endl;
+                      << "taken, please try again." << std::endl;
         }
     }
     std::string groupType = qHelper->queryGroupType();
@@ -205,8 +207,7 @@ void CommandHelper::addGroupCommand() {
         
     manager->addGroup(std::move(newGroup));
     std::cout << outputPreamble << "Added group \"" 
-              << groupName << "\"" 
-              << std::endl;
+              << groupName << "\"." << std::endl;
 }
 
 
@@ -228,8 +229,7 @@ void CommandHelper::removeGroupCommand(std::string groupName, bool remAll,
         if (remAll || hasFilterType || hasFilterSemester || hasFilterTopic) {
             std::cerr << outputPreamble
                       << "Invalid command, can't have a specific name when "
-                      << "trying to use a filter flag."
-                      << std::endl;
+                      << "trying to use a filter flag." << std::endl;
                 return;
         }
         if (!manager->containsGroup(groupName)) {
@@ -257,12 +257,10 @@ void CommandHelper::removeGroupCommand(std::string groupName, bool remAll,
 
     const std::vector<std::unique_ptr<Group>>& groups = manager->getGroups();
     if (remAll) {
-        std::string response;
-        response = qHelper->queryRemAllGroups();
-        if (response == "y") {
+        bool response = qHelper->queryRemAllGroups();
+        if (response) {
             manager->clearAllGroups();
-            std::cout << outputPreamble << "Removed all groups"
-                      << std::endl;
+            std::cout << outputPreamble << "Removed all groups" << std::endl;
         }
         return;
     } else if (hasFilterType) {
@@ -270,8 +268,7 @@ void CommandHelper::removeGroupCommand(std::string groupName, bool remAll,
         bool validType = qHelper->isValidGroupType(filterType);
         if (!validType) {
             std::cerr << outputPreamble << "ERROR when trying to find type \""
-                      << filterType << "\", please try again."
-                      << std::endl;
+                      << filterType << "\", please try again." << std::endl;
             return;
         }
     } else if (hasFilterSemester) {
@@ -279,22 +276,21 @@ void CommandHelper::removeGroupCommand(std::string groupName, bool remAll,
         bool validSemester = qHelper->isValidSemester(filterSemester);
         if (!validSemester) {
             std::cerr << outputPreamble << "ERROR when trying to find semester \""
-                      << filterSemester << "\", please try again."
-                      << std::endl;
+                      << filterSemester << "\", please try again." << std::endl;
             return;
         }
     } else if (hasFilterTopic) {
-        std::string filterTopicPlus = qHelper->translateTopic(filterTopicPlus);
-        bool validTopic = qHelper->isValidTopic(filterTopicPlus);
+        filterTopic = qHelper->translateTopic(filterTopic);
+        bool validTopic = qHelper->isValidTopic(filterTopic);
         if (!validTopic) {
             std::cerr << outputPreamble << "ERROR when trying to find topic \""
-                      << filterTopicPlus << "\", please try again."
-                      << std::endl;
+                      << filterTopic << "\", please try again." << std::endl;
             return;
         }
     }
 
-
+    
+    std::vector<std::string> remNames;
     std::vector<int> toRemove;
     for (int i = 0; i < static_cast<int>(groups.size()); i++) {
         const std::unique_ptr<Group>& group = groups.at(i);
@@ -302,10 +298,13 @@ void CommandHelper::removeGroupCommand(std::string groupName, bool remAll,
         if (hasName) {
             if (group->getName() == groupName) {
                 toRemove.push_back(group->getIdNum());
+                remNames.push_back(groupName);
                 break;
             } else { continue; }
         } else {
-            if (hasFilterType && filterType != groupType) {
+            if (hasFilterType && filterType == groupType) {
+                toRemove.push_back(group->getIdNum());
+                remNames.push_back(group->getName());
                 continue;
             } else if (hasFilterSemester) {
                 if (groupType != "Class" && groupType != "Research" && 
@@ -314,43 +313,46 @@ void CommandHelper::removeGroupCommand(std::string groupName, bool remAll,
                     
                 } else if (Class* cGroup = dynamic_cast<Class*>(group.get())) {
                     if (filterSemester == cGroup->getSemesterStr()) {
-                        toRemove.push_back(group->getIdNum());
+                        toRemove.push_back(cGroup->getIdNum());
+                        remNames.push_back(cGroup->getName());
                         continue;
                     } 
                 } else if (Research* rGroup = dynamic_cast<Research*>(group.get())) {
                     if (filterSemester == rGroup->getSemesterStr()) {
-                        toRemove.push_back(group->getIdNum());
+                        toRemove.push_back(rGroup->getIdNum());
+                        remNames.push_back(rGroup->getName());
                         continue;
                     } 
                 } else if (SelfStudy* sGroup = dynamic_cast<SelfStudy*>(group.get())) {
                     if (filterSemester == sGroup->getSemesterStr()) {
-                        toRemove.push_back(group->getIdNum());
+                        toRemove.push_back(sGroup->getIdNum());
+                        remNames.push_back(sGroup->getName());
                         continue;
                     } 
                 }
             } else if (hasFilterTopic) {
-                if (groupType != "Class" && groupType != "DevWork" && 
-                        groupType != "Research" && groupType != "SelfStudy") {
-                    continue;
-                        
-                } else if (Class* cGroup = dynamic_cast<Class*>(group.get())) {
+                if (Class* cGroup = dynamic_cast<Class*>(group.get())) {
                     if (filterTopic == cGroup->getTopicStr()) {
-                        toRemove.push_back(group->getIdNum());
+                        toRemove.push_back(cGroup->getIdNum());
+                        remNames.push_back(cGroup->getName());
                         continue;
                     }
                 } else if (DevWork* dGroup = dynamic_cast<DevWork*>(group.get())) {
                     if (filterTopic == dGroup->getTopicStr()) {
-                        toRemove.push_back(group->getIdNum());
+                        toRemove.push_back(dGroup->getIdNum());
+                        remNames.push_back(dGroup->getName());
                         continue;
                     }
                 } else if (Research* rGroup = dynamic_cast<Research*>(group.get())) {
                     if (filterTopic == rGroup->getTopicStr()) {
-                        toRemove.push_back(group->getIdNum());
+                        toRemove.push_back(rGroup->getIdNum());
+                        remNames.push_back(rGroup->getName());
                         continue;
                     } 
                 } else if (SelfStudy* sGroup = dynamic_cast<SelfStudy*>(group.get())) {
                     if (filterTopic == sGroup->getTopicStr()) {
-                        toRemove.push_back(group->getIdNum());
+                        toRemove.push_back(sGroup->getIdNum());
+                        remNames.push_back(sGroup->getName());
                         continue;
                     }
                 }
@@ -358,13 +360,10 @@ void CommandHelper::removeGroupCommand(std::string groupName, bool remAll,
         }
     }
 
-    for (int i = static_cast<int>(toRemove.size()) - 1; i >= 0; i--) {
-        int groupId = toRemove.at(i);
-        std::string remName = manager->getGroupFromId(groupId)->getName();
-        manager->removeGroup(groupId);
+    for (int i = 0; i < static_cast<int>(toRemove.size()); i++) {
+        manager->removeGroup(toRemove.at(i));
         std::cout << outputPreamble << "Removed group \"" 
-                  << remName << "\""
-                  << std::endl;
+                  << remNames.at(i) << "\"." << std::endl;
     }
 }
 
@@ -378,14 +377,16 @@ void CommandHelper::listTasksCommand(std::string groupName,
         bool date2Flag, bool date3Flag) {
 
     int filterCounter = 0;
+    int dateFilterCounter = 0;
     bool hasFilterType = !filterType.empty();
     if (dateFlag) filterCounter ++;
     if (date1Flag) filterCounter ++;
     if (date2Flag) filterCounter ++;
     if (date3Flag) filterCounter ++;
+    dateFilterCounter = filterCounter; // In case future flags are added.
     if (filterCounter > 1) {
         std::cerr << outputPreamble
-                  << "Invalid command, can't use multiple filters at the same time"
+                  << "Invalid command, can't use multiple filters at the same time."
                   << std::endl;
         return;
     }
@@ -394,23 +395,23 @@ void CommandHelper::listTasksCommand(std::string groupName,
     if (!validName) {
         std::cerr << outputPreamble
                   << "ERROR when trying to find group with name of \""
-                  << groupName << "\", please try again."
-                  << std::endl;
+                  << groupName << "\", please try again." << std::endl;
         return;
     }
 
     const std::vector<std::unique_ptr<Task>>& tasks = manager->getTasks(groupName);
     if (hasFilterType) {
-        std::string filterTypePlus = qHelper->translateTaskType(filterType);
-        bool validType = qHelper->isValidTaskType(filterTypePlus);
+        std::string filterType = qHelper->translateTaskType(filterType);
+        bool validType = qHelper->isValidTaskType(filterType);
         if (!validType) {
             std::cerr << outputPreamble << "ERROR when trying to find task with type of \""
-                      << filterTypePlus << "\", please try again."
-                      << std::endl;            
+                      << filterType << "\", please try again." << std::endl;
         }
     }
 
-    int counter = 0;
+    std::vector<std::string> listTypes;
+    std::vector<std::string> listNames;
+    std::vector<std::string> listDates;
     for (int i = 0; i < static_cast<int>(tasks.size()); i++) {
         const std::unique_ptr<Task>& task = tasks.at(i);
         std::string taskType = task->getType();
@@ -432,17 +433,32 @@ void CommandHelper::listTasksCommand(std::string groupName,
             if (!validDate) continue;
         }
 
-        if (filterCounter != 0) {
-            std::cout << "(" << std::to_string(counter) << ") "
-                      << taskType << ": " << task->getName()
-                      << "        Due " << date
-                      << std::endl;
-        }
+        if (!date.empty()) listDates.push_back(date);
+        listTypes.push_back(taskType);
+        listNames.push_back(task->getName());
+    }
 
-        std::cout << "(" << std::to_string(counter) << ") "
-                  << taskType << ": " << task->getName() 
-                  << std::endl;
-        counter++;   
+    int namesSize = static_cast<int>(listNames.size());
+    if (namesSize > 0) {
+        std::cout << "==================== Tasks (" << groupName 
+                  << ") ====================" << std::endl;
+    }
+    for (int i = 0; i < namesSize; i++) {
+        if (dateFilterCounter != 0) {
+            std::cout << "(" << i << ") " << listTypes.at(i) << ": " 
+                      << listNames.at(i) << "        Due " << listDates.at(i)
+                      << std::endl;
+        } else {
+            std::cout << "(" << i << ") " << listTypes.at(i) 
+                      << ": " << listNames.at(i) << std::endl;
+        }  
+    }
+    if (namesSize > 0) {
+        std::cout << "==============================";
+        for (int i = 0; i < static_cast<int>(groupName.size()); i++) {
+            std::cout << "=";
+        }
+        std::cout << "====================" << std::endl;
     }
 }
 
@@ -457,8 +473,7 @@ void CommandHelper::addTaskCommand(std::string groupName) {
     if (!validGroupName) {
         std::cerr << outputPreamble
                   << "ERROR when trying to find group with name of \""
-                  << groupName << "\", please try again."
-                  << std::endl;
+                  << groupName << "\", please try again." << std::endl;
         return;
     }
     int taskCounter = static_cast<int>(manager->getTasks(groupName).size());
@@ -469,10 +484,9 @@ void CommandHelper::addTaskCommand(std::string groupName) {
         taskName = qHelper->queryTaskName();
         validTaskName = !manager->containsTask(groupName, taskName);
         if (!validTaskName) {
-            std::cerr << outputPreamble
+            std::cerr << outputPreamble 
                       << "Can't add a task with a name that's already "
-                      << "taken, please try again."
-                      << std::endl;
+                      << "taken, please try again." << std::endl;
         }
     }
         
@@ -571,6 +585,101 @@ void CommandHelper::addTaskCommand(std::string groupName) {
         
     manager->addTask(groupName, std::move(newTask));
     std::cout << outputPreamble << "Added task \"" 
-              << taskName << "\"" 
-              << std::endl;
+              << taskName << "\"." << std::endl;
+}
+
+
+
+void CommandHelper::removeTaskCommand(std::string groupName, std::string taskName,
+            std::string filterType, bool allFlag, bool statusFlag) {
+
+    bool validGroupName = manager->containsGroup(groupName);
+    if (!validGroupName) {
+        std::cerr << outputPreamble
+                  << "ERROR when trying to find group with name of \""
+                  << groupName << "\", please try again." << std::endl;
+        return;
+    }
+
+    bool hasName = !taskName.empty();
+    bool hasFilterType = !filterType.empty();
+
+    if (hasName) {
+        if (hasFilterType || allFlag || statusFlag) {
+            std::cerr << outputPreamble 
+                      << "Invalid command, can't have a specific name when "
+                      << "trying to use a filter flag." << std::endl;
+                return;
+        }
+        if (!manager->containsTask(groupName, taskName)) {
+            std::cerr << outputPreamble << "Invalid command, no task of that name "
+                      << "in the group " << groupName << "."
+                      << std::endl;
+            return;
+        }
+    }
+
+    int filterCounter = 0;
+    if (hasFilterType) filterCounter ++;
+    if (allFlag) filterCounter ++;
+    if (statusFlag) filterCounter ++;
+    if (filterCounter > 1) {
+        std::cerr << outputPreamble
+                  << "Invalid command, can't use multiple filters at the same time."
+                  << std::endl;
+        return;
+    } else if (filterCounter == 0 && !hasName) {
+        std::cerr << outputPreamble << "Invalid command, you need to set a flag."
+                  << std::endl;
+        return;
+    }
+
+    const std::vector<std::unique_ptr<Group>>& groups = manager->getGroups();
+    if (hasFilterType) {
+        filterType = qHelper->translateTaskType(filterType);
+        bool validType = qHelper->isValidTaskType(filterType);
+        if (!validType) {
+            std::cerr << outputPreamble << "ERROR when trying to find type \""
+                      << filterType << "\", please try again." << std::endl;
+            return;
+        }
+    } else if (allFlag) {
+        bool response = qHelper->queryRemAllTasks();
+        if (response) {
+            manager->clearAllTasks(groupName);
+            std::cout << outputPreamble << "Removed all tasks in "
+                      << groupName << "." << std::endl;
+        }
+        return; 
+    }
+
+    std::vector<int> toRemove;
+    std::vector<std::string> remNames;
+    const std::vector<std::unique_ptr<Task>>& tasks = manager->getTasks(groupName);
+    for (int i = 0; i < static_cast<int>(tasks.size()); i++) {
+        const std::unique_ptr<Task>& task = tasks.at(i);
+        std::string taskType = task->getType();
+        if (hasName) {
+            if (task->getName() == taskName) {
+                toRemove.push_back(task->getIdNum());
+                remNames.push_back(taskName);
+                break;
+            } else { continue; }
+        } else {
+            if (hasFilterType && filterType != taskType) {
+                continue;
+            } else if (statusFlag) {
+                if (task->getStatus()) {
+                    toRemove.push_back(task->getIdNum());
+                    remNames.push_back(task->getName());
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < static_cast<int>(toRemove.size()); i++) {
+        manager->removeTask(groupName, toRemove.at(i));
+        std::cout << outputPreamble << "Removed task \"" 
+                  << remNames.at(i) << "\"." << std::endl;
+    }
 }
