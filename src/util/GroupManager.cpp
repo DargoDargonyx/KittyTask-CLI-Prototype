@@ -21,8 +21,6 @@
 
 // Utility & External header files
 #include "util/GroupManager.hpp"
-#include "util/Semester.hpp"
-#include "util/Topic.hpp"
 #include "external/json.hpp"
 
 // Built in libraries
@@ -68,21 +66,18 @@ void GroupManager::checkDataDirectory() {
         }
     } catch (const fs::filesystem_error& e) {
         std::cerr << outputPreamble << "ERROR when creating directory \"" 
-                  << filepath << "\": " << e.what() 
-                  << std::endl;
+                  << filepath << "\": " << e.what() << std::endl;
     }
 
     try {
         bool tasksCreated = fs::create_directories(filepath + "tasks/");
         if (tasksCreated) {
             std::cout << outputPreamble << "Directory created: " 
-                      << filepath << "tasks/" 
-                      << std::endl;
+                      << filepath << "tasks/" << std::endl;
         }
     } catch (const fs::filesystem_error& e) {
         std::cerr << outputPreamble << "ERROR when creating directory \""
-                  << filepath << "/tasks\": " << e.what()
-                  << std::endl;
+                  << filepath << "/tasks\": " << e.what() << std::endl;
     }
 }
 
@@ -124,7 +119,6 @@ void GroupManager::loadGroupData() {
 void GroupManager::saveGroupData() {
     for (int i = 0; i < static_cast<int>(groups.size()); i++) {
         Group* group = groups.at(i).get();
-        
         std::string groupType = group->getType();
         data[i]["name"] = group->getName();
         data[i]["type"] = groupType;
@@ -132,23 +126,23 @@ void GroupManager::saveGroupData() {
         if (groupType == "Class") {
             Class* cGroup = static_cast<Class*>(group);
             data[i]["year"] = cGroup->getYear();
-            data[i]["semester"] = cGroup->getSemesterStr();
-            data[i]["topic"] = cGroup->getTopicStr();
+            data[i]["semester"] = cGroup->getSemester();
+            data[i]["topic"] = cGroup->getTopic();
             data[i]["grade"] = cGroup->getGrade();
         } else if (groupType == "DevWork") {
             DevWork* dGroup = static_cast<DevWork*>(group);
             data[i]["year"] = dGroup->getYear();
-            data[i]["topic"] = dGroup->getTopicStr();
+            data[i]["topic"] = dGroup->getTopic();
         } else if (groupType == "Research") {
             Research* rGroup = static_cast<Research*>(group);
             data[i]["year"] = rGroup->getYear();
-            data[i]["semester"] = rGroup->getSemesterStr();
-            data[i]["topic"] = rGroup->getTopicStr();
+            data[i]["semester"] = rGroup->getSemester();
+            data[i]["topic"] = rGroup->getTopic();
         } else if (groupType == "SelfStudy") {
             SelfStudy* sGroup = static_cast<SelfStudy*>(group);
             data[i]["year"] = sGroup->getYear();
-            data[i]["semester"] = sGroup->getSemesterStr();
-            data[i]["topic"] = sGroup->getTopicStr();
+            data[i]["semester"] = sGroup->getSemester();
+            data[i]["topic"] = sGroup->getTopic();
         }
 
         std::string idStr = std::to_string(i);
@@ -159,18 +153,19 @@ void GroupManager::saveGroupData() {
         if (taskInFile.is_open()) {
             taskfile = json::parse(taskInFile);
         }
-        taskInFile.close();      
+        taskInFile.close(); 
 
         const std::vector<std::unique_ptr<Task>>& tasks = group->getTasks();
         for (int j = 0; j < static_cast<int>(tasks.size()); j++) {
             Task* task = tasks.at(j).get();
 
             std::string taskType = task->getType();
+            taskfile[j]["type"] = taskType;
             taskfile[j]["name"] = task->getName();
             taskfile[j]["date"] = task->getDate();
             taskfile[j]["status"] = task->getStatus();
-            taskfile[j]["type"] = taskType;
 
+            // Singular case for the time being
             if (taskType != "Chore") {
                 GradedTask* gradedTask = static_cast<GradedTask*>(task);
                 taskfile[j]["grade"] = gradedTask->getGrade();
@@ -192,56 +187,38 @@ void GroupManager::saveGroupData() {
     if (groupOutFile.is_open()) {
         groupOutFile << std::setw(4) << data << std::endl;
     } else {
-        std::cerr << outputPreamble
-                  << "ERROR when trying to write to groupData.json file"
-                  << std::endl;
+        std::cerr << outputPreamble << "ERROR when trying to write "
+                  << "to groupData.json file." << std::endl;
     }
     groupOutFile.close();
 }
-
-
 
 /**
  * @brief Builds a group from json values.
  * @param groupId The idNum of the group in question.
  * @return A pointer to the newly built group.
  */
-std::unique_ptr<Group> GroupManager::buildGroup(const int groupId) {
+std::unique_ptr<Group> GroupManager::buildGroup(int groupId) {
     std::string name = data[groupId]["name"];
     std::string type = data[groupId]["type"];
 
     if (type == "Class") {
-        return std::make_unique<Class>(
-                    groupId, 
-                    name,
+        return std::make_unique<Class>(groupId, name,
                     static_cast<uint16_t>(data[groupId]["year"]),
-                    jsonStrToSemester(groupId),
-                    jsonStrToTopic(groupId),
-                    static_cast<uint16_t>(data[groupId]["grade"])
-                );
+                    data[groupId]["semester"], data[groupId]["topic"],
+                    static_cast<uint16_t>(data[groupId]["grade"]));
     } else if (type == "DevWork") {
-        return std::make_unique<DevWork>(
-                    groupId,
-                    name,
+        return std::make_unique<DevWork>(groupId, name,
                     static_cast<uint16_t>(data[groupId]["year"]),
-                    jsonStrToTopic(groupId)
-                );
+                    data[groupId]["topic"]);
     } else if (type == "Research") {
-        return std::make_unique<Research>(
-                    groupId, 
-                    name,
+        return std::make_unique<Research>(groupId, name,
                     static_cast<uint16_t>(data[groupId]["year"]),
-                    jsonStrToSemester(groupId),
-                    jsonStrToTopic(groupId)
-                );
+                    data[groupId]["semester"], data[groupId]["topic"]);
     } else if (type == "SelfStudy") {
-        return std::make_unique<SelfStudy>(
-                    groupId, 
-                    name,
+        return std::make_unique<SelfStudy>(groupId, name,
                     static_cast<uint16_t>(data[groupId]["year"]),
-                    jsonStrToSemester(groupId),
-                    jsonStrToTopic(groupId)
-                );
+                    data[groupId]["semester"], data[groupId]["topic"]);
     } else {
         std::cout << outputPreamble << "No known group of type \""
                   << data[groupId]["type"] << "\", using a default type instead..."
@@ -257,172 +234,62 @@ std::unique_ptr<Group> GroupManager::buildGroup(const int groupId) {
  * @param taskId The idNum of the task in question.
  * @return A pointer to the newly built task.
  */
-std::unique_ptr<Task> GroupManager::buildTask(const json& taskfile, const int taskId) {
+std::unique_ptr<Task> GroupManager::buildTask(const json& taskfile, 
+        int taskId) {
+    
+    std::string type = taskfile[taskId]["type"];
     std::string name = taskfile[taskId]["name"];
     std::string date = taskfile[taskId]["date"];
     bool status = taskfile[taskId]["status"];
     uint16_t grade;
-    std::string type = taskfile[taskId]["type"];
 
     if (type == "Chore") {
-        return std::make_unique<Chore>(
-                    taskId, 
-                    name, 
-                    date, 
-                    status
-                );
+        return std::make_unique<Chore>(taskId, name, 
+                    date, status);
     } else if (type == "Exam") {
         grade = static_cast<uint16_t>(taskfile[taskId]["grade"]);
-        return std::make_unique<Exam>(
-                    taskId, 
-                    name, 
-                    date, 
-                    status,
-                    grade
-                );
+        return std::make_unique<Exam>(taskId, name, 
+                    date, status, grade);
     } else if (type == "Homework") {
         grade = static_cast<uint16_t>(taskfile[taskId]["grade"]);
-        return std::make_unique<Homework>(
-                    taskId, 
-                    name, 
-                    date, 
-                    status, 
-                    grade
-                );
+        return std::make_unique<Homework>(taskId, name, 
+                    date, status, grade);
     } else if (type == "Lab") {
         grade = static_cast<uint16_t>(taskfile[taskId]["grade"]);
-        return std::make_unique<Lab>(
-                    taskId, 
-                    name, 
-                    date, 
-                    status,
-                    grade
-                );
+        return std::make_unique<Lab>(taskId, name, 
+                    date, status, grade);
     } else if (type == "LabAssignment") {
         grade = static_cast<uint16_t>(taskfile[taskId]["grade"]);
-        return std::make_unique<LabAssignment>(
-                    taskId, 
-                    name, 
-                    date, 
-                    status,
-                    grade
-                );
+        return std::make_unique<LabAssignment>(taskId, name, 
+                    date, status, grade);
     } else if (type == "Notes") {
         grade = static_cast<uint16_t>(taskfile[taskId]["grade"]);
-        return std::make_unique<Notes>(
-                    taskId, 
-                    name, 
-                    date, 
-                    status,
-                    grade
-                );
+        return std::make_unique<Notes>(taskId, name, 
+                    date, status, grade);
     } else if (type == "Presentation") {
         grade = static_cast<uint16_t>(taskfile[taskId]["grade"]);
-        return std::make_unique<Presentation>(
-                    taskId, 
-                    name, 
-                    date, 
-                    status,
-                    grade
-                );
+        return std::make_unique<Presentation>(taskId, name, 
+                    date, status, grade);
     } else if (type == "Programming") {
         grade = static_cast<uint16_t>(taskfile[taskId]["grade"]);
-        return std::make_unique<Programming>(
-                    taskId, 
-                    name, 
-                    date, 
-                    status,
-                    grade
-                );
+        return std::make_unique<Programming>(taskId, name, 
+                    date, status,grade);
     } else if (type == "Project") {
         grade = static_cast<uint16_t>(taskfile[taskId]["grade"]);
-        return std::make_unique<Project>(
-                    taskId, 
-                    name, 
-                    date, 
-                    status,
-                    grade
-                );
+        return std::make_unique<Project>(taskId, name, 
+                    date, status,grade);
     } else if (type == "Quiz") {
         grade = static_cast<uint16_t>(taskfile[taskId]["grade"]);
-        return std::make_unique<Quiz>(
-                    taskId, 
-                    name, 
-                    date, 
-                    status,
-                    grade
-                );
+        return std::make_unique<Quiz>(taskId, name, 
+                    date, status,grade);
     } else if (type == "Reading") {
         grade = static_cast<uint16_t>(taskfile[taskId]["grade"]);
-        return std::make_unique<Reading>(
-                    taskId, 
-                    name, 
-                    date, 
-                    status, 
-                    grade
-                );
+        return std::make_unique<Reading>(taskId, name, 
+                    date, status, grade);
     } else {
-        std::cout << outputPreamble << "Unknown task type of \""
-                  << type << "\", using a default type instead..."
-                  << std::endl;
-        return std::make_unique<Task>(
-                    taskId, 
-                    name, 
-                    date, 
-                    status
-                );
-    }
-}
-
-/**
- * @brief Translates a json value for Semester into an Enum object.
- * @param groupId The idNum of the group the Semester is associated with.
- * @return The Semester Enum object in question.
- */
-Semester GroupManager::jsonStrToSemester(const int groupId) {
-    std::string semesterStr = data[groupId]["semester"];
-    if (semesterStr == "Spring") {
-        return Semester::SPRING;
-    } else if (semesterStr == "Fall") {
-        return Semester::FALL;
-    } else if (semesterStr == "Summer") {
-        return Semester::SUMMER;
-    } else {
-        std::cerr << outputPreamble
-                  << "ERROR when reading from group data JSON, unknown semester \"" 
-                  << semesterStr
-                  << "\" from the group " 
-                  << data[groupId]["name"] 
-                  << std::endl;
-        throw std::invalid_argument("Unknown semester value in JSON");
-    }
-}
-
-/**
- * @brief Translates a json value for Topic into an Enum object.
- * @param groupId The idNum of the group the Topic is associated with.
- * @return The Topic Enum object in question.
- */
-Topic GroupManager::jsonStrToTopic(const int groupId) {
-    std::string topicStr = data[groupId]["topic"];
-    if (topicStr == "Math") {
-        return Topic::MATH;
-    } else if (topicStr == "CS") {
-        return Topic::CS;
-    } else if (topicStr == "Physics") {
-        return Topic::PHYSICS;
-    } else if (topicStr == "Chemistry") {
-        return Topic::CHEM;
-    } else if (topicStr == "Biology") {
-        return Topic::BIO;
-    } else {
-        std::cerr << outputPreamble
-                  << "ERROR when reading from group data JSON, unknown topic \"" 
-                  << topicStr
-                  << "\" from the group " 
-                  << data[groupId]["name"] 
-                  << std::endl;
-        throw std::invalid_argument("Unknown topic value in JSON");
+        std::cout << outputPreamble << "Unknown task type of \"" << type 
+                  << "\", using a default type instead..." << std::endl;
+        return std::make_unique<Task>(taskId, name, date, status);
     }
 }
 
@@ -436,13 +303,11 @@ void GroupManager::refreshGroups() {
     saveGroupData();
 }
 
-
-
 /**
  * @brief An accessor for the groups field.
  * @return A reference to the groups field.
  */
-const std::vector<std::unique_ptr<Group>>& GroupManager::getGroups() const {
+const std::vector<std::unique_ptr<Group>>& GroupManager::getGroups() {
     return groups;
 }
 
@@ -466,7 +331,7 @@ const std::vector<std::unique_ptr<Task>>& GroupManager::getTasks(
  */
 bool GroupManager::containsGroup(const std::string& groupName) {
     for (int i = 0; i < static_cast<int>(groups.size()); i++) {
-        if (groups.at(i)->getName() == groupName) return true;
+        if (groups.at(i).get()->getName() == groupName) return true;
     }
     return false;
 }
@@ -476,9 +341,9 @@ bool GroupManager::containsGroup(const std::string& groupName) {
  * @param groupId The idNum of the group in question.
  * @return A pointer to the group in question.
  */
-Group* GroupManager::getGroupFromId(const int groupId) {
+Group* GroupManager::getGroupFromId(int groupId) {
     for (int i = 0; i < static_cast<int>(groups.size()); i++) {
-        if (groups.at(i)->getIdNum() == groupId) {
+        if (groups.at(i).get()->getIdNum() == groupId) {
             return groups.at(i).get();
         }   
     }
@@ -490,9 +355,11 @@ Group* GroupManager::getGroupFromId(const int groupId) {
  * @param groupName The name of the group in question.
  * @return A pointer to the group in question.
  */
-Group* GroupManager::getGroupFromName(const std::string& groupName) {
+Group* GroupManager::getGroupFromName(
+        const std::string& groupName) {
+    
     for (int i = 0; i < static_cast<int>(groups.size()); i++) {
-        if (groups.at(i)->getName() == groupName) {
+        if (groups.at(i).get()->getName() == groupName) {
             return groups.at(i).get();
         }
     }
@@ -507,8 +374,8 @@ Group* GroupManager::getGroupFromName(const std::string& groupName) {
  * @param taskId The idNum of the task in question.
  * @return A pointer to the task in question.
  */
-Task* GroupManager::getTaskFromId(const std::string& groupName, 
-        const int taskId) {
+Task* GroupManager::getTaskFromId(
+        const std::string& groupName, int taskId) {
 
     Group* group = getGroupFromName(groupName);
     return group->getTaskFromId(taskId);
@@ -522,8 +389,7 @@ Task* GroupManager::getTaskFromId(const std::string& groupName,
  * @return A boolean representation of whether or not the task
  * was in the given group.
  */
-bool GroupManager::containsTask(
-        const std::string& groupName, 
+bool GroupManager::containsTask(const std::string& groupName, 
         const std::string& taskName) {
 
     Group* group = getGroupFromName(groupName);
@@ -534,7 +400,9 @@ bool GroupManager::containsTask(
  * @brief A mutator for the groups field.
  * @param newGroups The new vector of groups.
  */
-void GroupManager::setGroups(std::vector<std::unique_ptr<Group>>&& newGroups) {
+void GroupManager::setGroups(
+        std::vector<std::unique_ptr<Group>>&& newGroups) {
+    
     groups = std::move(newGroups);
 }
 
@@ -576,8 +444,7 @@ void GroupManager::clearAllGroups() {
  * @param groupName The name of the group in question.
  * @param newTask A pointer to the task in question.
  */
-void GroupManager::addTask(
-        const std::string& groupName, 
+void GroupManager::addTask(const std::string& groupName, 
         std::unique_ptr<Task> newTask) {
 
     Group* group = getGroupFromName(groupName);
@@ -590,8 +457,7 @@ void GroupManager::addTask(
  * @param groupName The name of the group in question.
  * @param taskId The idNum of the task in question.
  */
-void GroupManager::removeTask(
-        const std::string& groupName, 
+void GroupManager::removeTask(const std::string& groupName, 
         const int taskId) {
 
     Group* group = getGroupFromName(groupName);

@@ -1,7 +1,5 @@
 // Utility header files
 #include "util/QueryHelper.hpp"
-#include "util/Semester.hpp"
-#include "util/Topic.hpp"
 
 // Built in libraries
 #include <string>
@@ -83,7 +81,7 @@ uint16_t QueryHelper::queryGroupYear() {
             groupYear = static_cast<uint16_t>(std::stoi(yearStr));
         } catch (...) { 
             std::cerr << outputPreamble
-                      << "Conversion to int failed" 
+                      << "ERROR, couldn't convert the year into an integer"
                       << std::endl;
             groupYear = 0;
         }
@@ -253,8 +251,6 @@ std::string QueryHelper::queryTaskDate() {
     return taskDate;
 }
 
-
-
 /**
  * @brief Checks whether or not a given group type is valid.
  * @param groupType A string representation of the group
@@ -275,7 +271,7 @@ bool QueryHelper::isValidGroupType(const std::string& groupType) {
  * name in question is valid.
  */
 bool QueryHelper::isValidGroupName(const std::string& groupName) {
-    return groupName.length();
+    return groupName.length() > 0;
 }
 
 /**
@@ -342,7 +338,7 @@ bool QueryHelper::isValidTaskType(const std::string& taskType) {
  * name in question is valid.
  */
 bool QueryHelper::isValidTaskName(const std::string& taskName) {
-    return taskName.length();
+    return taskName.length() > 0;
 }
 
 /**
@@ -392,6 +388,7 @@ bool QueryHelper::isValidDate(const std::string& date) {
  * task date in question is valid.
  */
 bool QueryHelper::isValidTaskDate1(const std::string& date) {
+    if (!isValidDate(date)) return false;
     std::string today = getTodaysDateStr();
     std::string expectedDay = addDaysToDate(today, 10);
     return isDateInRange(date, today, expectedDay);
@@ -405,6 +402,7 @@ bool QueryHelper::isValidTaskDate1(const std::string& date) {
  * task date in question is valid.
  */
 bool QueryHelper::isValidTaskDate2(const std::string& date) {
+    if (!isValidDate(date)) return false;
     std::string today = getTodaysDateStr();
     std::string expectedDay = addDaysToDate(today, 30);
     return isDateInRange(date, today, expectedDay);
@@ -418,6 +416,7 @@ bool QueryHelper::isValidTaskDate2(const std::string& date) {
  * task date in question is valid.
  */
 bool QueryHelper::isValidTaskDate3(const std::string& date) {
+    if (!isValidDate(date)) return false;
     std::string today = getTodaysDateStr();
     std::string expectedDay = addDaysToDate(today, 90);
     return isDateInRange(date, today, expectedDay);
@@ -561,32 +560,6 @@ std::string QueryHelper::translateTopic(const std::string& topic) {
 }
 
 /**
- * @brief Translates a string into a Semester object.
- * @param semester The string in question.
- * @return The Semester object in question.
- */
-Semester QueryHelper::strToSemester(const std::string& semester) {
-    if (semester == "Spring") return Semester::SPRING;
-    else if (semester == "Fall") return Semester::FALL;
-    else if (semester == "Summer") return Semester::SUMMER;
-    else throw std::invalid_argument("Unknown semester value");
-}
-
-/**
- * @brief Translates a string into a Topic object.
- * @param topic The string in question.
- * @return The Topic object in question.
- */
-Topic QueryHelper::strToTopic(const std::string& topic) {
-    if (topic == "Math") return Topic::MATH;
-    else if (topic == "CS") return Topic::CS;
-    else if (topic == "Physics") return Topic::PHYSICS;
-    else if (topic == "Chemistry") return Topic::CHEM;
-    else if (topic == "Biology") return Topic::BIO;
-    else throw std::invalid_argument("Unknown topic value");
-}
-
-/**
  * @brief Translates a string into a proper yes or no if available.
  * @param str The string in question.
  * @return A proper yes or no if available, if not the original
@@ -641,9 +614,7 @@ std::string QueryHelper::addDaysToDate(const std::string& date, int days) {
  * @return The date string in American format.
  */
 std::string QueryHelper::buildDateStr(int day, int month, int year) {
-    return std::to_string(month) + "/"
-            + std::to_string(day) + "/"
-            + std::to_string(year);
+    return std::format("{:02}/{:02}/{:04}", month, day, year);
 }
 
 /**
@@ -655,11 +626,8 @@ std::string QueryHelper::getTodaysDateStr() {
     using namespace std::chrono;
     auto today = floor<days>(system_clock::now());
     year_month_day ymd = year_month_day{today};
-    return std::format(
-            "{:02}/{:02}/{:04}",
-            unsigned(ymd.month()),
-            unsigned(ymd.day()),
-            int(ymd.year()));
+    return std::format("{:02}/{:02}/{:04}", unsigned(ymd.month()),
+            unsigned(ymd.day()), int(ymd.year()));
 }
 
 /**
@@ -686,9 +654,9 @@ bool QueryHelper::isDateInRange(const std::string& date,
 
     // Apparently tuples compare from left to right
     // which tells us if the date is in the range
-    std::tuple dateTup  = std::make_tuple(y, m, d);
-    std::tuple lowerTup = std::make_tuple(lY, lM, lD);
-    std::tuple upperTup = std::make_tuple(uY, uM, uD);
+    std::tuple<int, int, int> dateTup  = std::make_tuple(y, m, d);
+    std::tuple<int, int, int> lowerTup = std::make_tuple(lY, lM, lD);
+    std::tuple<int, int, int> upperTup = std::make_tuple(uY, uM, uD);
 
     return dateTup >= lowerTup && dateTup <= upperTup;
 }

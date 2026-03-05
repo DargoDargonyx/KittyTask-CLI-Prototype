@@ -18,3 +18,11 @@ Quiz::Quiz(int idNum, const std::string& name,
 
     this->type = "Quiz";
 }
+
+/**
+ * @brief An accessor for the type field.
+ * @return The type field as a string.
+ */
+std::string Quiz::getType() {
+    return TYPE;
+}

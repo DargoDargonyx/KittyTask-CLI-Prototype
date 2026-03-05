@@ -10,6 +10,8 @@
 
 
 class Lab : public GradedTask {
+    private:
+        const std::string TYPE = "Lab";
     public:
         // Constructor
         Lab(
@@ -19,6 +21,8 @@ class Lab : public GradedTask {
             bool status,
             uint16_t grade
         );
+        // Accessor
+        std::string getType(); 
 };
 
 #endif //LAB_H

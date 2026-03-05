@@ -21,23 +21,14 @@ int main(int argc, char **argv) {
 
     CLI::App* listGroups = app.add_subcommand("listGroups", "Lists all the known groups");
     std::string filterListGroupType;
-    listGroups->add_option(
-        "-t,--type", 
-        filterListGroupType, 
-        "Only list groups of this type"
-    );
+    listGroups->add_option("-t,--type", filterListGroupType, 
+            "Only list groups of this type");
     std::string filterListGroupSemester;
-    listGroups->add_option(
-        "-S,--semester", 
-        filterListGroupSemester, 
-        "Only list groups of this semester"
-    );
+    listGroups->add_option("-S,--semester", filterListGroupSemester, 
+            "Only list groups of this semester");
     std::string filterListGroupTopic;
-    listGroups->add_option(
-        "-T,--topic", 
-        filterListGroupTopic,
-        "Only list groups of this topic"
-    );
+    listGroups->add_option("-T,--topic", filterListGroupTopic,
+            "Only list groups of this topic");
 
     listGroups->callback([&]() { 
         cmdHelper->listGroupsCommand(
@@ -49,48 +40,28 @@ int main(int argc, char **argv) {
 
 
     CLI::App* addGroup = app.add_subcommand("addGroup", "Add a new group");
-    
     addGroup->callback([&]() {
         cmdHelper->addGroupCommand();
     });
 
 
-
-    CLI::App* remGroup = app.add_subcommand(
-            "removeGroup",
-            "Remove a group from the current groups"
-    );
-
+    CLI::App* remGroup = app.add_subcommand("removeGroup",
+            "Remove a group from the current groups");
     std::string remGroupName;
-    remGroup->add_option(
-        "-n, --name",
-        remGroupName,
-        "Remove a group by name"
-    );
+    remGroup->add_option("-n, --name", remGroupName,
+            "Remove a group by name");
     bool filterRemGroupAll = false;
-    remGroup->add_flag(
-        "--all", 
-        filterRemGroupAll, 
-        "Remove all groups from the current groups"
-    );
+    remGroup->add_flag("-a, --all", filterRemGroupAll, 
+            "Remove all groups from the current groups");
     std::string filterRemGroupType;
-    remGroup->add_option(
-        "-t, --type",
-        filterRemGroupType,
-        "Remove all groups of the given type"
-    );
+    remGroup->add_option("-t, --type", filterRemGroupType,
+            "Remove all groups of the given type");
     std::string filterRemGroupSemester;
-    remGroup->add_option(
-        "-S, --semester",
-        filterRemGroupSemester,
-        "Remove all groups of the given semester"
-    );
+    remGroup->add_option("-S, --semester", filterRemGroupSemester,
+            "Remove all groups of the given semester");
     std::string filterRemGroupTopic;
-    remGroup->add_option(
-        "-T, --topic",
-        filterRemGroupTopic,
-        "Remove all groups of the given topic"
-    );
+    remGroup->add_option("-T, --topic", filterRemGroupTopic,
+            "Remove all groups of the given topic");
 
     remGroup->callback([&]() {
         cmdHelper->removeGroupCommand(
@@ -103,47 +74,26 @@ int main(int argc, char **argv) {
     });
   
 
-
-    CLI::App* listTasks = app.add_subcommand(
-        "listTasks", 
-        "Lists all the known taks in a given group"
-    );
+    CLI::App* listTasks = app.add_subcommand("listTasks", 
+            "Lists all the known taks in a given group");
     std::string listTaskGroupName;
-    listTasks->add_option(
-        "-G, --group",
-        listTaskGroupName,
-        "A specific group to list the tasks for"
-    )->required();
+    listTasks->add_option("-G, --group", listTaskGroupName,
+            "A specific group to list the tasks for")->required();
     std::string filterListTaskType;
-    listTasks->add_option(
-        "-t,--type", 
-        filterListTaskType, 
-        "Only list tasks of this type"
-    );
+    listTasks->add_option("-t,--type", filterListTaskType, 
+            "Only list tasks of this type");
     bool hasFilterListTaskDate = false;
-    listTasks->add_flag(
-        "-d,--date",
-        hasFilterListTaskDate,
-        "Only list tasks due the current day and/or in the future"
-    );
+    listTasks->add_flag("-d,--date", hasFilterListTaskDate,
+            "Only list tasks due the current day and/or in the future");
     bool hasFilterListTaskDate1 = false;
-    listTasks->add_flag(
-        "--d1, --date1",
-        hasFilterListTaskDate1,
-        "Only list tasks due within the next 10 days"
-    );
+    listTasks->add_flag("--date1", hasFilterListTaskDate1,
+            "Only list tasks due within the next 10 days");
     bool hasFilterListTaskDate2 = false;
-    listTasks->add_flag(
-        "--d2, --date2",
-        hasFilterListTaskDate2,
-        "Only list tasks due within the next 30 days"
-    );
+    listTasks->add_flag("--date2", hasFilterListTaskDate2,
+            "Only list tasks due within the next 30 days");
     bool hasFilterListTaskDate3 = false;
-    listTasks->add_flag(
-        "--d3, --date3",
-        hasFilterListTaskDate3,
-        "Only list tasks due within the next 90 days"
-    );
+    listTasks->add_flag("--date3", hasFilterListTaskDate3,
+            "Only list tasks due within the next 90 days");
 
     listTasks->callback([&]() {
         cmdHelper->listTasksCommand(
@@ -157,52 +107,32 @@ int main(int argc, char **argv) {
     });
 
 
-
     CLI::App* addTask = app.add_subcommand("addTask", "Add a new task to a group");
     std::string addTaskGroupName;
-    addTask->add_option(
-        "-G, --group",
-        addTaskGroupName,
-        "A specific group that the task gets added to"
-    )->required();
+    addTask->add_option("-G, --group", addTaskGroupName,
+            "A specific group that the task gets added to")->required();
     
     addTask->callback([&]() {
         cmdHelper->addTaskCommand(addTaskGroupName); 
     });
 
 
-
     CLI::App* removeTask = app.add_subcommand("removeTask", "Remove a task from a group");
     std::string removeTaskGroupName;
-    removeTask->add_option(
-        "-G, --group",
-        removeTaskGroupName,
-        "A specific group that the task gets removed from"
-    )->required();
+    removeTask->add_option("-G, --group", removeTaskGroupName,
+            "A specific group that the task gets removed from")->required();
     std::string filterRemoveTaskTaskName;
-    removeTask->add_option(
-        "-n, --name",
-        filterRemoveTaskTaskName,
-        "Remove a task by name in the given group"
-    );
+    removeTask->add_option("-n, --name", filterRemoveTaskTaskName,
+            "Remove a task by name in the given group");
     std::string filterRemoveTaskType;
-    removeTask->add_option(
-        "-t, --type",
-        filterRemoveTaskType,
-        "Remove a task by task type in the given group"
-    );
+    removeTask->add_option("-t, --type", filterRemoveTaskType,
+            "Remove a task by task type in the given group");
     bool filterRemoveTaskAll = false;
-    removeTask->add_flag(
-        "-a, --all",
-        filterRemoveTaskAll,
-        "Remove all tasks in the given group"
-    );
+    removeTask->add_flag("-a, --all", filterRemoveTaskAll,
+            "Remove all tasks in the given group");
     bool filterRemoveTaskStatus = false;
-    removeTask->add_flag(
-        "-s, --status",
-        filterRemoveTaskStatus,
-        "Remove all tasks that are marked complete"
-    );
+    removeTask->add_flag("-s, --status", filterRemoveTaskStatus,
+            "Remove all tasks that are marked complete");
 
     removeTask->callback([&]() {
         cmdHelper->removeTaskCommand(
@@ -213,6 +143,44 @@ int main(int argc, char **argv) {
             filterRemoveTaskStatus
         );
     });
+
+
+    CLI::App* countTasks = app.add_subcommand("countTasks", 
+            "Get a count of how many tasks are in a group");
+    std::string countTasksGroupName;
+    countTasks->add_option("-G, --group", countTasksGroupName,
+            "A specific group to count the tasks in");
+    std::string countTasksFilterType;
+    countTasks->add_option("-t, --type", countTasksFilterType,
+            "Count all tasks of a specific Type");
+    bool countTasksAllFlag = false;
+    countTasks->add_flag("-a, --all", countTasksAllFlag,
+            "Count every task in every group");
+    bool countTasksStatusFlag = false;
+    countTasks->add_flag("-s, --status", countTasksStatusFlag,
+            "Count all tasks that are marked incomplete");
+    bool countTasksDate1Flag = false;
+    countTasks->add_flag("--d1, --date1", countTasksDate1Flag,
+            "Count all tasks that are due within the next 10 days");
+    bool countTasksDate2Flag = false;
+    countTasks->add_flag("--d2, --date2", countTasksDate2Flag,
+            "Count all tasks that are due within the next 30 days");
+    bool countTasksDate3Flag = false;
+    countTasks->add_flag("--d3, --date3", countTasksDate3Flag,
+            "Count all tasks that are due within the next 90 days");
+
+    countTasks->callback([&]() {
+        cmdHelper->countTasksCommand(
+            countTasksGroupName,
+            countTasksFilterType,
+            countTasksAllFlag,
+            countTasksStatusFlag,
+            countTasksDate1Flag,
+            countTasksDate2Flag,
+            countTasksDate3Flag
+        );
+    });
+
 
     CLI11_PARSE(app, argc, argv);
     return 0;

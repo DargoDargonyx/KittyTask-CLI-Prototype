@@ -18,3 +18,11 @@ Notes::Notes(int idNum, const std::string& name,
 
     this->type = "Notes";
 }
+
+/**
+ * @brief An accessor for the type field.
+ * @return The type field as a string.
+ */
+std::string Notes::getType() {
+    return TYPE;
+}

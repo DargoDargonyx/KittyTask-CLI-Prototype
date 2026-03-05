@@ -12,16 +12,13 @@
  */
 Task::Task(int idNum, const std::string& name, 
         const std::string& date, bool status) 
-    : idNum(idNum), name(name), date(date), status(status) {
-
-    this->type = "Default";
-}
+    : idNum(idNum), name(name), date(date), status(status) {}
 
 /**
  * @brief An accessor for the idNum field.
  * @return The idNum field as an integer.
  */
-int Task::getIdNum() const {
+int Task::getIdNum() {
     return idNum;
 }
 
@@ -29,7 +26,7 @@ int Task::getIdNum() const {
  * @brief An accessor for the name field.
  * @return The name field as a string.
  */
-std::string Task::getName() const {
+std::string Task::getName() {
     return name;
 }
 
@@ -38,7 +35,7 @@ std::string Task::getName() const {
  * @return The date field as a string in
  * the format of MM/DD/YYYY.
  */
-std::string Task::getDate() const {
+std::string Task::getDate() {
     return date;
 }
 
@@ -46,7 +43,7 @@ std::string Task::getDate() const {
  * @brief An accessor for the status field.
  * @return The status field as a boolean.
  */
-bool Task::getStatus() const {
+bool Task::getStatus() {
     return status;
 }
 
@@ -54,8 +51,8 @@ bool Task::getStatus() const {
  * @brief An accessor for the type field.
  * @return The type field as a string.
  */
-std::string Task::getType() const {
-    return type;
+std::string Task::getType() {
+    return TYPE;
 }
 
 /**

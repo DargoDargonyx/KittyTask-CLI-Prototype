@@ -18,3 +18,11 @@ Project::Project(int idNum, const std::string& name,
 
     this->type = "Project";
 }
+
+/**
+ * @brief An accessor for the type field.
+ * @return The type field as a string.
+ */
+std::string Project::getType() {
+    return TYPE;
+}

@@ -10,6 +10,8 @@
 
 
 class Reading : public GradedTask {
+    private:
+        const std::string TYPE = "Reading";
     public:
         // Constructor
         Reading(
@@ -19,6 +21,8 @@ class Reading : public GradedTask {
             bool status,
             uint16_t grade
         );
+        // Accessor
+        std::string getType(); 
 };
 
 #endif //READING_H

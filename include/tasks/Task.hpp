@@ -6,6 +6,8 @@
 
 
 class Task {
+    private:
+        const std::string TYPE = "Task";
     protected:
         // Fields
         int idNum;
@@ -19,16 +21,16 @@ class Task {
                 const std::string& date, bool status);
         virtual ~Task() = default;
         // Accessors
-        int getIdNum() const;
-        std::string getName() const;
-        std::string getDate() const;
-        bool getStatus() const;
-        std::string getType() const; 
+        virtual int getIdNum();
+        virtual std::string getName();
+        virtual std::string getDate();
+        virtual bool getStatus();
+        virtual std::string getType(); 
         // Mutators
-        void setIdNum(int idNum);
-        void setName(const std::string& name);
-        void setDate(const std::string& date);
-        void setStatus(bool status);
+        virtual void setIdNum(int idNum);
+        virtual void setName(const std::string& name);
+        virtual void setDate(const std::string& date);
+        virtual void setStatus(bool status);
 };
 
 #endif //TASK_H

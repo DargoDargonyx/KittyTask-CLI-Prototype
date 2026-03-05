@@ -10,6 +10,8 @@
 
 
 class LabAssignment : public GradedTask {
+    private:
+        const std::string TYPE = "LabAssignment";
     public:
         // Constructor
         LabAssignment(
@@ -19,6 +21,8 @@ class LabAssignment : public GradedTask {
             bool status,
             uint16_t grade
         );
+        // Accessor
+        std::string getType(); 
 };
 
 #endif //LABASSIGNMENT_H

@@ -10,6 +10,8 @@
 
 
 class GradedTask : public Task {
+    private:
+        const std::string TYPE = "GradedTask";
     protected:
         // Field
         uint16_t grade;
@@ -24,7 +26,8 @@ class GradedTask : public Task {
         );
         virtual ~GradedTask() = default;
         // Accessor & Mutator
-        uint16_t getGrade() const;
+        std::string getType();
+        uint16_t getGrade();
         void setGrade(uint16_t grade);
 };
 

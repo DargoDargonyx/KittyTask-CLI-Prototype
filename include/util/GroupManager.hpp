@@ -6,8 +6,6 @@
 #include "tasks/Task.hpp"
 
 // Utility & External header files
-#include "util/Semester.hpp"
-#include "util/Topic.hpp"
 #include "external/json.hpp"
 
 // Built in libraries
@@ -30,10 +28,8 @@ class GroupManager {
         void loadGroupData();
         void saveGroupData();
         // Translating JSON to objects
-        std::unique_ptr<Group> buildGroup(const int groupId);
-        std::unique_ptr<Task> buildTask(const json& taskfile, const int taskId);
-        Semester jsonStrToSemester(const int groupId);
-        Topic jsonStrToTopic(const int groupId);
+        std::unique_ptr<Group> buildGroup(int groupId);
+        std::unique_ptr<Task> buildTask(const json& taskfile, int taskId);
         void refreshGroups();
     public:
         // Constructor
@@ -42,20 +38,20 @@ class GroupManager {
             const std::string& outputPreamble
         );
         // Accessors
-        const std::vector<std::unique_ptr<Group>>& getGroups() const;
+        const std::vector<std::unique_ptr<Group>>& getGroups();
         const std::vector<std::unique_ptr<Task>>& getTasks(const std::string& groupName);
-        Group* getGroupFromId(const int groupId);
+        Group* getGroupFromId(int groupId);
         Group* getGroupFromName(const std::string& groupName);
-        Task* getTaskFromId(const std::string& groupName, const int taskId);
+        Task* getTaskFromId(const std::string& groupName, int taskId);
         bool containsGroup(const std::string& groupName);
         bool containsTask(const std::string& groupName, const std::string& taskName);
         // Mutators
         void setGroups(std::vector<std::unique_ptr<Group>>&& newGroups);
         void addGroup(std::unique_ptr<Group> newGroup);
-        void removeGroup(const int groupId);
+        void removeGroup( int groupId);
         void clearAllGroups();
         void addTask(const std::string& groupName, std::unique_ptr<Task> newTask);
-        void removeTask(const std::string& groupName, const int taskId);
+        void removeTask(const std::string& groupName, int taskId);
         void clearAllTasks(const std::string& groupName);
 };
 

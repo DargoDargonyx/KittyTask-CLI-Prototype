@@ -10,6 +10,8 @@
 
 
 class Project : public GradedTask {
+    private:
+        const std::string TYPE = "Project";
     public:
         // Constructor
         Project(
@@ -19,6 +21,8 @@ class Project : public GradedTask {
             bool status,
             uint16_t grade
         );
+        // Accessor
+        std::string getType(); 
 };
 
 #endif //PROJECT_H

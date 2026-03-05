@@ -1,9 +1,6 @@
 // Group header file
 #include "groups/DevWork.hpp"
 
-// Utility header file
-#include "util/Topic.hpp"
-
 // Built in library
 #include <stdexcept>
 
@@ -17,9 +14,8 @@
  * @param grade The grade associated with the group.
  */
 DevWork::DevWork(int idNum, const std::string& name, uint16_t year, 
-        const Topic& topic) : Group(idNum, name) {
+        const std::string& topic) : Group(idNum, name) {
 
-    this->type = "DevWork";
     this->year = year;
     this->topic = topic;
 }
@@ -28,36 +24,24 @@ DevWork::DevWork(int idNum, const std::string& name, uint16_t year,
  * @brief An accessor for the year field.
  * @return The year field.
  */
-uint16_t DevWork::getYear() const {
+uint16_t DevWork::getYear() {
     return year;
-}
-
-/**
- * @brief An accessor for the topic field.
- * @return The topic field as a Topic object.
- */
-Topic DevWork::getTopic() const {
-    return topic;
 }
 
 /**
  * @brief An accessor for the topic field.
  * @return The topic field as a string.
  */
-std::string DevWork::getTopicStr() const {
-    if (topic == Topic::MATH) {
-        return "Math";
-    } else if (topic == Topic::CS) {
-        return "CS";
-    } else if (topic == Topic::PHYSICS) {
-        return "Physics";
-    } else if (topic == Topic::CHEM) {
-        return "Chemistry";
-    } else if (topic == Topic::BIO) {
-        return "Biology";
-    } else {
-        throw std::invalid_argument("Unknown topic");
-    }
+std::string DevWork::getTopic() {
+    return topic;
+}
+
+/**
+ * @brief An accessor for the type field.
+ * @return The type field as a string.
+ */
+std::string DevWork::getType() {
+    return TYPE;
 }
 
 /**
@@ -70,8 +54,8 @@ void DevWork::setYear(uint16_t year) {
 
 /**
  * @brief A mutator for the topic field.
- * @param topic The new Topic object to be set.
+ * @param topic The new string to be set.
  */
-void DevWork::setTopic(const Topic& topic) {
+void DevWork::setTopic(const std::string& topic) {
     this->topic = topic;
 }

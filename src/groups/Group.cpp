@@ -14,16 +14,13 @@
  * @param name The name of the group.
  */
 Group::Group(int idNum, const std::string& name) 
-    : idNum(idNum), name(name) {
-
-    this->type = "Default";
-}
+    : idNum(idNum), name(name) {}
 
 /**
  * @brief An accessor for the idNum field.
  * @return The idNum field as an integer.
  */
-int Group::getIdNum() const {
+int Group::getIdNum() {
     return idNum;
 }
 
@@ -31,7 +28,7 @@ int Group::getIdNum() const {
  * @brief An accesor for the name field.
  * @return The name field as a string.
  */
-std::string Group::getName() const {
+std::string Group::getName() {
     return name;
 }
 
@@ -39,7 +36,7 @@ std::string Group::getName() const {
  * @brief An accessor for the tasks field.
  * @return A reference to the tasks field vector.
  */
-std::vector<std::unique_ptr<Task>>& Group::getTasks() {
+const std::vector<std::unique_ptr<Task>>& Group::getTasks() {
     return tasks;
 }
 
@@ -47,8 +44,8 @@ std::vector<std::unique_ptr<Task>>& Group::getTasks() {
  * @brief An accessor for the type field.
  * @return The type field as a string.
  */
-std::string Group::getType() const {
-    return type;
+std::string Group::getType() {
+    return TYPE;
 }
 
 /**
@@ -60,7 +57,7 @@ std::string Group::getType() const {
  */
 bool Group::containsTask(const std::string& taskName) {
     for (int i = 0; i < static_cast<int>(tasks.size()); i++) {
-        if (tasks.at(i)->getName() == taskName) return true;
+        if (tasks.at(i).get()->getName() == taskName) return true;
     }
     return false;
 }
@@ -71,13 +68,13 @@ bool Group::containsTask(const std::string& taskName) {
  * @param taskId The idNum for the task in question.
  * @return A pointer to the task in question.
  */
-Task* Group::getTaskFromId(const int taskId) {
+Task* Group::getTaskFromId(int taskId) {
     for (int i = 0; i < static_cast<int>(tasks.size()); i++) {
-        if (tasks.at(i)->getIdNum() == taskId) {
+        if (tasks.at(i).get()->getIdNum() == taskId) {
             return tasks.at(i).get();
         }   
     }
-    throw std::invalid_argument("ERROR when trying to find a task by id that doesn't exist");
+    throw std::invalid_argument("ERROR, trying to find a task by an id that doesn't exist");
 }
 
 /**
@@ -88,11 +85,11 @@ Task* Group::getTaskFromId(const int taskId) {
  */
 Task* Group::getTaskFromName(const std::string& taskName) {
     for (int i = 0; i < static_cast<int>(tasks.size()); i++) {
-        if (tasks.at(i)->getName() == taskName) {
+        if (tasks.at(i).get()->getName() == taskName) {
             return tasks.at(i).get();
         }
     }
-    throw std::invalid_argument("Error when trying to find a task by name that doesn't exist");
+    throw std::invalid_argument("Error, trying to find a task by a name that doesn't exist");
 }
 
 /**
@@ -135,7 +132,7 @@ void Group::addTask(std::unique_ptr<Task> newTask) {
  * @brief Removes a Task pointer from the tasks field.
  * @param taskId The idNum of the Task pointer in question.
  */
-void Group::removeTask(const int taskId) {
+void Group::removeTask(int taskId) {
     for (int i = 0; i < static_cast<int>(tasks.size()); i++) {
         if (tasks.at(i)->getIdNum() == taskId) {
             tasks.erase(tasks.begin() + i);

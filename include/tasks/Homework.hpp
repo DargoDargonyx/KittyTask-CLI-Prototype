@@ -10,6 +10,8 @@
 
 
 class Homework : public GradedTask {
+    private:
+        const std::string TYPE = "Homework";
     public:
         // Constructor
         Homework(
@@ -19,6 +21,8 @@ class Homework : public GradedTask {
             bool status,
             uint16_t grade
         );
+        // Accessor
+        std::string getType(); 
 };
 
 #endif //HOMEWORK_H

@@ -18,3 +18,11 @@ LabAssignment::LabAssignment(int idNum, const std::string& name,
    
     this->type = "LabAssignment";
 }
+
+/**
+ * @brief An accessor for the type field.
+ * @return The type field as a string.
+ */
+std::string LabAssignment::getType() {
+    return TYPE;
+}

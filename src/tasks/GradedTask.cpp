@@ -14,17 +14,22 @@
  */
 GradedTask::GradedTask(int idNum, const std::string& name, 
     const std::string& date, bool status, uint16_t grade)
-    : Task(idNum, name, date, status) {
+    : Task(idNum, name, date, status), grade(grade) {
+}
 
-    this->type = "GradedTask";
-    this->grade = grade;
+/**
+ * @brief An accessor for the type field.
+ * @return The type field as a string.
+ */
+std::string GradedTask::getType() {
+    return TYPE;
 }
 
 /**
  * @brief An accessor for the grade field.
  * @return The grade field as an integer.
  */
-uint16_t GradedTask::getGrade() const {
+uint16_t GradedTask::getGrade() {
     return grade;
 }
 

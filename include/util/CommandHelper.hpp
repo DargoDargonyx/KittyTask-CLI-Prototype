@@ -50,4 +50,13 @@ class CommandHelper {
             bool allFlag,
             bool statusFlag
         );
+        void countTasksCommand(
+            std::string groupName,
+            std::string filterType,
+            bool allFlag,
+            bool statusFlag,
+            bool date1Flag,
+            bool date2Flag,
+            bool date3Flag
+        );
 };

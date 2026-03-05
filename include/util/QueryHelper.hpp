@@ -1,10 +1,6 @@
 #ifndef QUERYHELPER_H
 #define QUERYHELPER_H
 
-// Utility header files
-#include "util/Semester.hpp"
-#include "util/Topic.hpp"
-
 // Built in libraries
 #include <string>
 #include <cstdint>
@@ -52,8 +48,6 @@ class QueryHelper {
         std::string translateSemester(const std::string& semester);
         std::string translateTopic(const std::string& topic);
         std::string translateTaskType(const std::string& taskType);
-        Semester strToSemester(const std::string& semester);
-        Topic strToTopic(const std::string& topic);
 };
 
 #endif //QUERYHELPER_H

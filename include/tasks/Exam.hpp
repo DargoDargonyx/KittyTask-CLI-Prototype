@@ -10,6 +10,8 @@
 
 
 class Exam : public GradedTask {
+    private:
+        const std::string TYPE = "Exam";
     public:
         // Constructor
         Exam(
@@ -19,6 +21,8 @@ class Exam : public GradedTask {
             bool status,
             uint16_t grade
         );
+        // Accessor
+        std::string getType(); 
 };
 
 #endif //EXAM_H

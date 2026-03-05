@@ -18,3 +18,11 @@ Reading::Reading(int idNum, const std::string& name,
        
     this->type = "Reading";
 }
+
+/**
+ * @brief An accessor for the type field.
+ * @return The type field as a string.
+ */
+std::string Reading::getType() {
+    return TYPE;
+}

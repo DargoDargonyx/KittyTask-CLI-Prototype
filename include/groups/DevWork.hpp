@@ -4,9 +4,6 @@
 // Group header file
 #include "groups/Group.hpp"
 
-// Utility header file
-#include "util/Topic.hpp"
-
 // Built in libraries
 #include <string>
 #include <cstdint>
@@ -15,23 +12,24 @@
 class DevWork : public Group {
     private:
         // Fields
+        const std::string TYPE = "DevWork";
         uint16_t year;
-        Topic topic;
+        std::string topic;
     public:
         // Constructor
         DevWork(
             int idNum, 
             const std::string& name, 
             uint16_t year, 
-            const Topic& topic
+            const std::string& topic
         );
         // Accessors
-        uint16_t getYear() const;
-        Topic getTopic() const;
-        std::string getTopicStr() const;
+        uint16_t getYear();
+        std::string getTopic();
+        std::string getType();
         // Mutators
         void setYear(uint16_t year);
-        void setTopic(const Topic& topic);
+        void setTopic(const std::string& topic);
 };
 
 #endif //DEVWORK_H

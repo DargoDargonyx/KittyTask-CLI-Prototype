@@ -18,3 +18,11 @@ Presentation::Presentation(int idNum, const std::string& name,
 
     this->type = "Presentation";
 }
+
+/**
+ * @brief An accessor for the type field.
+ * @return The type field as a string.
+ */
+std::string Presentation::getType() {
+    return TYPE;
+}

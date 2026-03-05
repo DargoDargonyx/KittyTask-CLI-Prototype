@@ -9,6 +9,8 @@
 
 
 class Chore : public Task {
+    private:
+        const std::string TYPE = "Chore";
     public:
         Chore(
             int idNum, 
@@ -16,6 +18,8 @@ class Chore : public Task {
             const std::string& date, 
             bool status
         );
+        // Accessor
+        std::string getType(); 
 };
 
 #endif //CHORE_H
