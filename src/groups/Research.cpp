@@ -1,8 +1,7 @@
 // Group header file
 #include "groups/Research.hpp"
 
-// Built in library
-#include <stdexcept>
+
 
 /**
  * @brief A constructor for the class.
@@ -13,8 +12,9 @@
  * @param topic The topic of the group.
  * @param grade The grade associated with the group.
  */
-Research::Research(int idNum, const std::string& name, uint16_t year, 
-        const std::string& semester, const std::string& topic) : Group(idNum, name) {
+Research::Research(int idNum, const std::string& name, int year, 
+        const std::string& semester, const std::string& topic) 
+        : Group(idNum, name) {
 
     this->year = year;
     this->semester = semester;
@@ -25,7 +25,7 @@ Research::Research(int idNum, const std::string& name, uint16_t year,
  * @brief An accessor for the year field.
  * @return The year field as an integer.
  */
-uint16_t Research::getYear() {
+int Research::getYear() {
     return year;
 }
 
@@ -57,7 +57,7 @@ std::string Research::getType() {
  * @brief A mutator for the year field.
  * @param year The new year to integer be set.
  */
-void Research::setYear(uint16_t year) {
+void Research::setYear(int year) {
     this->year = year;
 }
 

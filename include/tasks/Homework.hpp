@@ -4,9 +4,8 @@
 // Task header file
 #include "tasks/GradedTask.hpp"
 
-// Built in libraries
+// Built in library
 #include <string>
-#include <cstdint>
 
 
 class Homework : public GradedTask {
@@ -19,7 +18,7 @@ class Homework : public GradedTask {
             const std::string& name, 
             const std::string& date, 
             bool status,
-            uint16_t grade
+            int grade
         );
         // Accessor
         std::string getType(); 

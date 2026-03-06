@@ -1,8 +1,6 @@
 // Group header file
 #include "groups/SelfStudy.hpp"
 
-// Built in library
-#include <stdexcept>
 
 
 /**
@@ -14,8 +12,9 @@
  * @param topic The topic of the group.
  * @param grade The grade associated with the group.
  */
-SelfStudy::SelfStudy(int idNum, const std::string& name, uint16_t year, 
-        const std::string& semester, const std::string& topic) : Group(idNum, name) {
+SelfStudy::SelfStudy(int idNum, const std::string& name, int year, 
+        const std::string& semester, const std::string& topic) 
+        : Group(idNum, name) {
 
     this->year = year;
     this->semester = semester;
@@ -26,7 +25,7 @@ SelfStudy::SelfStudy(int idNum, const std::string& name, uint16_t year,
  * @brief An accessor for the year field.
  * @return The year field as an integer.
  */
-uint16_t SelfStudy::getYear() {
+int SelfStudy::getYear() {
     return year;
 }
 
@@ -58,7 +57,7 @@ std::string SelfStudy::getType() {
  * @brief A mutator for the year field.
  * @param year The new year to integer be set.
  */
-void SelfStudy::setYear(uint16_t year) {
+void SelfStudy::setYear(int year) {
     this->year = year;
 }
 

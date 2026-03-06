@@ -1,8 +1,6 @@
 // Group header file
 #include "groups/Class.hpp"
 
-// Built in library
-#include <stdexcept>
 
 
 /**
@@ -16,7 +14,7 @@
  */
 Class::Class(int idNum, const std::string& name, 
         uint16_t year, const std::string& semester, 
-        const std::string& topic, uint16_t grade) : Group(idNum, name) {
+        const std::string& topic, int grade) : Group(idNum, name) {
 
     this->year = year;
     this->semester = semester;
@@ -28,7 +26,7 @@ Class::Class(int idNum, const std::string& name,
  * @brief An accessor for the year field.
  * @return The year field as an integer.
  */
-uint16_t Class::getYear() {
+int Class::getYear() {
     return year;
 }
 
@@ -52,7 +50,7 @@ std::string Class::getTopic() {
  * @brief An accessor for the grade field.
  * @return The grade field as an integer.
  */
-uint16_t Class::getGrade() {
+int Class::getGrade() {
     return grade;
 }
 
@@ -68,7 +66,7 @@ std::string Class::getType() {
  * @brief A mutator for the year field.
  * @param year The new year to integer be set.
  */
-void Class::setYear(uint16_t year) {
+void Class::setYear(int year) {
     this->year = year;
 }
 
@@ -92,6 +90,6 @@ void Class::setTopic(const std::string& topic) {
  * @brief A mutator for the grade field.
  * @param grade The new grade integer to be set.
  */
-void Class::setGrade(uint16_t grade) {
+void Class::setGrade(int grade) {
     this->grade = grade;
 }

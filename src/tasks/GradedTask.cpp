@@ -13,9 +13,8 @@
  * if applicable.
  */
 GradedTask::GradedTask(int idNum, const std::string& name, 
-    const std::string& date, bool status, uint16_t grade)
-    : Task(idNum, name, date, status), grade(grade) {
-}
+    const std::string& date, bool status, int grade)
+    : Task(idNum, name, date, status), grade(grade) {}
 
 /**
  * @brief An accessor for the type field.
@@ -29,7 +28,7 @@ std::string GradedTask::getType() {
  * @brief An accessor for the grade field.
  * @return The grade field as an integer.
  */
-uint16_t GradedTask::getGrade() {
+int GradedTask::getGrade() {
     return grade;
 }
 
@@ -37,6 +36,6 @@ uint16_t GradedTask::getGrade() {
  * @brief A mutator for the grade field.
  * @param grade The new grade integer to be set.
  */
-void GradedTask::setGrade(uint16_t grade) {
+void GradedTask::setGrade(int grade) {
     this->grade = grade;
 }

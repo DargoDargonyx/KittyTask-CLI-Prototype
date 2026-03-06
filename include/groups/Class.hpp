@@ -6,17 +6,16 @@
 
 // Built in libraries
 #include <string>
-#include <cstdint>
 
 
 class Class : public Group {
     private:
         // Fields
         const std::string TYPE = "Class";
-        uint16_t year;
+        int year;
         std::string semester;
         std::string topic;
-        uint16_t grade;
+        int grade;
     public:
         // Constructor
         Class(
@@ -25,19 +24,19 @@ class Class : public Group {
             uint16_t year, 
             const std::string& semester, 
             const std::string& topic,
-            uint16_t grade
+            int grade
         );
         // Accessors
-        uint16_t getYear();
+        int getYear();
         std::string getSemester();
         std::string getTopic();
-        uint16_t getGrade();
+        int getGrade();
         std::string getType();
         // Mutators
-        void setYear(uint16_t year);
+        void setYear(int year);
         void setSemester(const std::string& semester);
         void setTopic(const std::string& topic);
-        void setGrade(uint16_t grade);
+        void setGrade(int grade);
 };
 
 #endif // CLASS_H

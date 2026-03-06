@@ -7,7 +7,7 @@
 #include <string>
 #include <memory>
 
-const std::string OUTPUT_PREAMBLE = "{KittyTask} ";
+const std::string LOG_PREAMBLE = "{KittyTask} ";
 const std::string STORAGE_FILEPATH = "data/";
 
 /**
@@ -15,7 +15,7 @@ const std::string STORAGE_FILEPATH = "data/";
  */
 int main(int argc, char **argv) {
     std::unique_ptr<CommandHelper> cmdHelper = 
-        std::make_unique<CommandHelper>(STORAGE_FILEPATH, OUTPUT_PREAMBLE);
+        std::make_unique<CommandHelper>(STORAGE_FILEPATH, LOG_PREAMBLE);
     CLI::App app{"KittyTracker-CLI"};
 
 

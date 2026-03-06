@@ -13,11 +13,8 @@
  * if applicable.
  */
 Notes::Notes(int idNum, const std::string& name, 
-        const std::string& date, bool status, uint16_t grade) 
-    : GradedTask(idNum, name, date, status, grade) {
-
-    this->type = "Notes";
-}
+        const std::string& date, bool status, int grade) 
+    : GradedTask(idNum, name, date, status, grade) {}
 
 /**
  * @brief An accessor for the type field.

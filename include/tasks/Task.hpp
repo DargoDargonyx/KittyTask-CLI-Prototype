@@ -7,7 +7,7 @@
 
 class Task {
     private:
-        const std::string TYPE = "Task";
+        const std::string TYPE = "Default";
     protected:
         // Fields
         int idNum;

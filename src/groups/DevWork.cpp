@@ -1,8 +1,6 @@
 // Group header file
 #include "groups/DevWork.hpp"
 
-// Built in library
-#include <stdexcept>
 
 
 /**
@@ -13,7 +11,7 @@
  * @param topic The topic of the group.
  * @param grade The grade associated with the group.
  */
-DevWork::DevWork(int idNum, const std::string& name, uint16_t year, 
+DevWork::DevWork(int idNum, const std::string& name, int year, 
         const std::string& topic) : Group(idNum, name) {
 
     this->year = year;
@@ -24,7 +22,7 @@ DevWork::DevWork(int idNum, const std::string& name, uint16_t year,
  * @brief An accessor for the year field.
  * @return The year field.
  */
-uint16_t DevWork::getYear() {
+int DevWork::getYear() {
     return year;
 }
 
@@ -48,7 +46,7 @@ std::string DevWork::getType() {
  * @brief A mutator for the year field.
  * @param year The new year to integer be set.
  */
-void DevWork::setYear(uint16_t year) {
+void DevWork::setYear(int year) {
     this->year = year;
 }
 

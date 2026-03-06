@@ -4,9 +4,8 @@
 // Task header file
 #include "tasks/Task.hpp"
 
-// Built in libraries
+// Built in library
 #include <string>
-#include <cstdint>
 
 
 class GradedTask : public Task {
@@ -14,7 +13,7 @@ class GradedTask : public Task {
         const std::string TYPE = "GradedTask";
     protected:
         // Field
-        uint16_t grade;
+        int grade;
     public:
         // Constructor & Deconstructor
         GradedTask(
@@ -22,13 +21,13 @@ class GradedTask : public Task {
             const std::string& name, 
             const std::string& date, 
             bool status,
-            uint16_t grade
+            int grade
         );
         virtual ~GradedTask() = default;
         // Accessor & Mutator
         std::string getType();
-        uint16_t getGrade();
-        void setGrade(uint16_t grade);
+        int getGrade();
+        void setGrade(int grade);
 };
 
 #endif //GRADEDTASK_H 

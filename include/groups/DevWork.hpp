@@ -6,29 +6,28 @@
 
 // Built in libraries
 #include <string>
-#include <cstdint>
 
 
 class DevWork : public Group {
     private:
         // Fields
         const std::string TYPE = "DevWork";
-        uint16_t year;
+        int year;
         std::string topic;
     public:
         // Constructor
         DevWork(
             int idNum, 
             const std::string& name, 
-            uint16_t year, 
+            int year, 
             const std::string& topic
         );
         // Accessors
-        uint16_t getYear();
+        int getYear();
         std::string getTopic();
         std::string getType();
         // Mutators
-        void setYear(uint16_t year);
+        void setYear(int year);
         void setTopic(const std::string& topic);
 };
 

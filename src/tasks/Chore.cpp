@@ -12,10 +12,7 @@
  */
 Chore::Chore(int idNum, const std::string& name, 
         const std::string& date, bool status) 
-    : Task(idNum, name, date, status) {
-
-    this->type = "Chore";
-}
+    : Task(idNum, name, date, status) {}
 
 /**
  * @brief An accessor for the type field.

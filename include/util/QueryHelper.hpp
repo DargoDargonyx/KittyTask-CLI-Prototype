@@ -3,16 +3,15 @@
 
 // Built in libraries
 #include <string>
-#include <cstdint>
 
 
 class QueryHelper {
     private:
         // Fields
-        std::string outputPreamble;
+        std::string logPreamble;
         // Utility
         bool isValidGroupName(const std::string& groupName);
-        bool isValidGroupYear(uint16_t groupType);
+        bool isValidGroupYear(int groupYear);
         bool isValidTaskName(const std::string& taskName);
         bool isValidDate(const std::string& date);
         std::string strToLower(const std::string& str);
@@ -24,11 +23,11 @@ class QueryHelper {
                 const std::string& lower, const std::string& upper);
     public:
         // Constructor
-        QueryHelper(const std::string& outputPreamble);
+        QueryHelper(const std::string& logPreamble);
         // Queries
         std::string queryGroupType();
         std::string queryGroupName();
-        uint16_t queryGroupYear();
+        int queryGroupYear();
         std::string queryGroupSemester();
         std::string queryGroupTopic();
         bool queryRemAllGroups();

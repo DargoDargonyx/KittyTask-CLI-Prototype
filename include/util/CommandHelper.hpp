@@ -1,5 +1,5 @@
 // Utility header file
-#include "util/GroupManager.hpp"
+#include "util/DataManager.hpp"
 #include "util/QueryHelper.hpp"
 
 // Built in libraries
@@ -11,8 +11,8 @@
 class CommandHelper {
     private:
         std::string filepath;
-        std::string outputPreamble;
-        std::unique_ptr<GroupManager> manager;
+        std::string logPreamble;
+        std::unique_ptr<DataManager> manager;
         std::unique_ptr<QueryHelper> qHelper;
     public:
         CommandHelper(
