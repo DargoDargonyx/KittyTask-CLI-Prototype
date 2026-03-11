@@ -85,12 +85,25 @@ void DataManager::checkDataDirectory() {
             std::cout << logPreamble << "Directory created: " 
                       << filepath << "tasks/" << std::endl;
         } else {
-            for (int groupId = 0; groupId < groupData.size(); groupId++) {
+            for (int groupId = 0; groupId < static_cast<int>(groupData.size()); groupId++) {
                 std::string filename = getTaskFilePath(groupId);
-                std::ifstream file(filename);
-                if (file.is_open()) 
-                    taskFiles.push_back(json::parse(file));
-                file.close();
+                if (fs::exists(filename)) {
+                    std::ifstream file(filename);
+                    if (file.is_open()) 
+                        taskFiles.push_back(json::parse(file));
+                    file.close();
+                }
+                else {
+                    std::ofstream file(filename);
+                    if (file.is_open()) {
+                        json temp;
+                        file << std::setw(4) << temp << std::endl;
+                    } else {
+                        std::cerr << logPreamble << "ERROR when trying to write "
+                                  << "to create task file." << std::endl;
+                    }
+                    file.close();
+                }
             }
         }
     } catch (const fs::filesystem_error& error) {
@@ -107,8 +120,7 @@ void DataManager::checkDataDirectory() {
 std::vector<std::unique_ptr<Group>> DataManager::loadGroupData() {
     std::vector<std::unique_ptr<Group>> groups;
     for (int groupId = 0; groupId < static_cast<int>(groupData.size()); groupId++) {
-        std::unique_ptr<Group> group = buildGroup(groupId);
-        groups.push_back(std::move(group));
+        groups.push_back(buildGroup(groupId));
     }
     return groups;
 }
@@ -123,8 +135,7 @@ std::vector<std::unique_ptr<Group>> DataManager::loadGroupData() {
 std::vector<std::unique_ptr<Task>> DataManager::loadTaskFile(int groupId) {
     std::vector<std::unique_ptr<Task>> tasks;
     for (int taskId = 0; taskId < static_cast<int>(taskFiles[groupId].size()); taskId++) {
-        std::unique_ptr<Task> task = buildTask(groupId, taskId);
-        tasks.push_back(std::move(task));
+        tasks.push_back(buildTask(groupId, taskId));
     }
     return tasks;
 }

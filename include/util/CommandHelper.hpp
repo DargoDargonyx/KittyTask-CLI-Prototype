@@ -7,7 +7,6 @@
 #include <vector>
 #include <memory>
 
-
 class CommandHelper {
     private:
         std::string filepath;
@@ -36,7 +35,8 @@ class CommandHelper {
         // Commands for tasks
         void listTasksCommand(
             std::string groupName, 
-            std::string filterType, 
+            std::string filterType,
+            bool allFlag,
             bool dateFlag,
             bool date1Flag,
             bool date2Flag, 

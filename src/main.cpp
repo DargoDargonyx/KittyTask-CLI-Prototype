@@ -78,10 +78,13 @@ int main(int argc, char **argv) {
             "Lists all the known taks in a given group");
     std::string listTaskGroupName;
     listTasks->add_option("-G, --group", listTaskGroupName,
-            "A specific group to list the tasks for")->required();
+            "A specific group to list the tasks for");
     std::string filterListTaskType;
     listTasks->add_option("-t,--type", filterListTaskType, 
             "Only list tasks of this type");
+    bool hasFilterListAll = false;
+    listTasks->add_flag("-a, --all", hasFilterListAll, 
+            "Lists all tasks in every group");
     bool hasFilterListTaskDate = false;
     listTasks->add_flag("-d,--date", hasFilterListTaskDate,
             "Only list tasks due the current day and/or in the future");
@@ -99,6 +102,7 @@ int main(int argc, char **argv) {
         cmdHelper->listTasksCommand(
             listTaskGroupName,
             filterListTaskType,
+            hasFilterListAll,
             hasFilterListTaskDate,
             hasFilterListTaskDate1,
             hasFilterListTaskDate2,

@@ -351,112 +351,119 @@ void CommandHelper::removeGroupCommand(std::string groupName, bool remAll,
  * @brief Handles the logic for the list tasks command.
  * @param groupName The group name option input.
  * @param filterType The task type option input.
+ * @param allFlag The flag that indicates every task to be listed.
  * @param dateFlag The task date flag.
  * @param date1Flag The task date1 flag.
  * @param date2Flag The task date2 flag.
  * @param date3Flag The task date3 flag.
  */
-void CommandHelper::listTasksCommand(std::string groupName, 
-        std::string filterType, bool dateFlag, bool date1Flag,
-        bool date2Flag, bool date3Flag) {
+struct TaskDisplay {
+    std::string type;
+    std::string name;
+    std::string date;
+};
 
-    int filterCounter = 0;
-    int dateFilterCounter = 0;
-    bool hasFilterType = !filterType.empty();
-    if (dateFlag) filterCounter ++;
-    if (date1Flag) filterCounter ++;
-    if (date2Flag) filterCounter ++;
-    if (date3Flag) filterCounter ++;
-    dateFilterCounter = filterCounter; // In case future flags are added.
-    if (filterCounter > 1) {
-        std::cerr << logPreamble << "Invalid command, you can't "
-                  << "use multiple filters at the same time."
-                  << std::endl;
-        return;
-    }
+void CommandHelper::listTasksCommand(std::string groupName, 
+        std::string filterType, bool allFlag, bool dateFlag, 
+        bool date1Flag, bool date2Flag, bool date3Flag) {
 
     int groupId = manager->getGroupIdFromName(groupName);
-    if (groupId == -1) {
-        std::cerr << logPreamble << "ERROR, can't find a group with the name \""
-                  << groupName << "\". Please try again." << std::endl;
+    bool hasGroupName = !groupName.empty();
+    bool hasFilterType = !filterType.empty();
+    int dateFilterCounter = dateFlag + date1Flag + date2Flag + date3Flag;
+
+    if (allFlag && hasGroupName) {
+        std::cerr << logPreamble
+                  << "Invalid command, you can't specify a group and "
+                  << "use the \"all\" flag at the same time.\n";
         return;
     }
-
-    const std::vector<std::unique_ptr<Task>>& tasks = manager->loadTaskFile(groupId);
+    if (!allFlag && !hasGroupName) {
+        std::cerr << logPreamble
+                  << "Invalid command, you must specify the tasks to list.\n";
+        return;
+    }
+    if (hasGroupName && groupId == -1) {
+        std::cerr << logPreamble
+                  << "ERROR, can't find a group with the name \""
+                  << groupName << "\".\n";
+        return;
+    }
+    if (dateFilterCounter > 1) {
+        std::cerr << logPreamble
+                  << "Invalid command, you can't use multiple date filters.\n";
+        return;
+    }
     if (hasFilterType) {
         filterType = qHelper->translateTaskType(filterType);
-        bool validType = qHelper->isValidTaskType(filterType);
-        if (!validType) {
-            std::cerr << logPreamble << "ERROR, unknown task type of \""
-                      << filterType << "\". Please try again." << std::endl;
+
+        if (!qHelper->isValidTaskType(filterType)) {
+            std::cerr << logPreamble
+                      << "ERROR, unknown task type \"" << filterType << "\".\n";
+            return;
         }
     }
 
-    std::vector<std::string> listTypes;
-    std::vector<std::string> listNames;
-    std::vector<std::string> listDates;
-    for (int i = 0; i < static_cast<int>(tasks.size()); i++) {
-        Task* task = tasks[i].get();
-        std::string taskType = task->getType();
-        if (hasFilterType && filterType != taskType) {
-            continue;
+    std::vector<TaskDisplay> results;
+    auto processTasks = [&](const std::vector<std::unique_ptr<Task>>& tasks) {
+        for (int i = 0; i < static_cast<int>(tasks.size()); i++) {
+            Task* task = tasks[i].get();
+            std::string type = task->getType();
+            std::string name = task->getName();
+            std::string date = task->getDate();
+            if (hasFilterType && filterType != type)
+                continue;
+            if (date1Flag && !qHelper->isValidTaskDate1(date)) continue;
+            if (date2Flag && !qHelper->isValidTaskDate2(date)) continue;
+            if (date3Flag && !qHelper->isValidTaskDate3(date)) continue;
+            if (!dateFlag && dateFilterCounter == 0) date.clear();
+            results.push_back({type, name, date});
         }
+    };
 
-        std::string date;
-        if (dateFlag) {
-            date = task->getDate();
-        } else if (date1Flag) {
-            bool validDate = qHelper->isValidTaskDate1(task->getDate());
-            if (!validDate) continue;
-            else date = task->getDate();
-        } else if (date2Flag) {
-            bool validDate = qHelper->isValidTaskDate2(task->getDate());
-            if (!validDate) continue;
-            else date = task->getDate();
-        } else if (date3Flag) {
-            bool validDate = qHelper->isValidTaskDate3(task->getDate());
-            if (!validDate) continue;
-            else date = task->getDate();
+    if (allFlag) {
+        const std::vector<std::unique_ptr<Group>>& groups = 
+                manager->loadGroupData();
+        for (int i = 0; i < static_cast<int>(groups.size()); i++) {
+            const std::vector<std::unique_ptr<Task>>& tasks = manager->loadTaskFile(i);
+            processTasks(tasks);
         }
-
-        listDates.push_back(date);
-        listTypes.push_back(taskType);
-        listNames.push_back(task->getName());
+    }
+    else {
+        const std::vector<std::unique_ptr<Task>>& tasks = 
+                manager->loadTaskFile(groupId);
+        processTasks(tasks);
     }
 
-    const int dueDateSpacer = 40;
-    int namesSize = static_cast<int>(listNames.size());
-    if (namesSize > 0) {
-        std::cout << "====================== Tasks {" << groupName 
-                  << "} ======================" << std::endl;
+    std::string headerName = allFlag ? "All Groups" : groupName;
+    if (!results.empty()) {
+        std::cout << "====================== Tasks {" << headerName
+                  << "} ======================\n";
     }
 
-    for (int i = 0; i < namesSize; i++) {
-        std::string index = std::to_string(i);
-        if (dateFilterCounter != 0) {
-            std::cout << "(" << index << ") " << listTypes[i] 
-                      << ": " << listNames[i];
-            int outStrSize = index.size() + listTypes[i].size() 
-                        + listNames[i].size() + 5; // random spaces and punctuation
-            
-            for (int j = 0; j < dueDateSpacer - outStrSize; j++) {
-                std::cout << " ";
-            } 
+    constexpr int DUE_DATE_COLUMN = 40;
+    for (size_t i = 0; i < results.size(); ++i) {
+        std::string line = "(" + std::to_string(i) + ") "
+                           + results[i].type + ": "
+                           + results[i].name;
 
-            std::cout << "Due: " << listDates[i] << std::endl;
-        } else {
-            std::cout << "(" << i << ") " << listTypes[i] 
-                      << ": " << listNames[i] << std::endl;
-        }  
+        if (!results[i].date.empty()) {
+            int padding = std::max(0,
+                DUE_DATE_COLUMN - static_cast<int>(line.size()));
+            line += std::string(padding, ' ');
+            line += "Due: " + results[i].date;
+        }
+        std::cout << line << "\n";
     }
-    if (namesSize > 0) {
+
+    if (!results.empty()) {
         std::cout << "================================";
-        for (int i = 0; i < static_cast<int>(groupName.size()); i++) {
+        for (size_t i = 0; i < headerName.size(); i++)
             std::cout << "=";
-        }
-        std::cout << "======================" << std::endl;
+        std::cout << "======================\n";
     }
 }
+        
 
 /**
  * @brief Handles the logic for the assTask command.
