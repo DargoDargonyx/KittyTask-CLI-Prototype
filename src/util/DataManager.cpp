@@ -27,7 +27,7 @@
 #include <vector>
 #include <memory>
 #include <filesystem>
-#include <iostream>
+#include <cstdio>
 #include <fstream>
 
 using json = nlohmann::json;
@@ -67,23 +67,21 @@ void DataManager::checkDataDirectory() {
     try {
         bool dataCreated = fs::create_directories(filepath);
         if (dataCreated) {
-            std::cout << logPreamble << "Directory created: " 
-                      << filepath << std::endl;
+            printf("%sDirectory created: \"%s\"\n", logPreamble.c_str(), filepath.c_str());
         } else {
             std::ifstream file(groupDataPath);
             if (file.is_open()) groupData = json::parse(file);
             file.close();
         }
     } catch (const fs::filesystem_error& error) {
-        std::cerr << logPreamble << "ERROR when creating directory \"" 
-                  << filepath << "\": " << error.what() << std::endl;
+        printf("%sERROR, had an issue when trying to create the directory \"%s\"\n", 
+                logPreamble.c_str(), filepath.c_str());
     }
 
     try {
         bool tasksCreated = fs::create_directories(filepath + "tasks/");
         if (tasksCreated) {
-            std::cout << logPreamble << "Directory created: " 
-                      << filepath << "tasks/" << std::endl;
+            printf("%sDirectory created: \"%stasks/\"\n", logPreamble.c_str(), filepath.c_str());
         } else {
             for (int groupId = 0; groupId < static_cast<int>(groupData.size()); groupId++) {
                 std::string filename = getTaskFilePath(groupId);
@@ -99,16 +97,16 @@ void DataManager::checkDataDirectory() {
                         json temp;
                         file << std::setw(4) << temp << std::endl;
                     } else {
-                        std::cerr << logPreamble << "ERROR when trying to write "
-                                  << "to create task file." << std::endl;
+                        printf("%sERROR, had an issue when trying to create the \
+                                directory \"%s\"\n", logPreamble.c_str(), filename.c_str());
                     }
                     file.close();
                 }
             }
         }
-    } catch (const fs::filesystem_error& error) {
-        std::cerr << logPreamble << "ERROR when creating directory \""
-                  << filepath << "/tasks\": " << error.what() << std::endl;
+    } catch (...) {
+        printf("%sERROR, had an issue when managing the directory \"%stasks/\"\n", 
+                logPreamble.c_str(), filepath.c_str());
     }
 }
 
@@ -149,8 +147,8 @@ void DataManager::saveGroupData() {
     if (file.is_open()) {
         file << std::setw(4) << groupData << std::endl;
     } else {
-        std::cerr << logPreamble << "ERROR when trying to write "
-                  << "to groupData.json file." << std::endl;
+        printf("%sERROR, could not successfully write to %s.\n", 
+                logPreamble.c_str(), groupDataPath.c_str());
     }
     file.close();
 }
@@ -167,8 +165,8 @@ void DataManager::saveTaskFile(int groupId) {
     if (file.is_open()) {
         file << std::setw(4) << taskFiles[groupId] << std::endl;
     } else {
-        std::cerr << logPreamble << "ERROR when trying to "
-                  << "write to group task file" << std::endl;
+        printf("%sERROR, could not successfully write to %s.\n",
+                logPreamble.c_str(), filename.c_str());
     }
     file.close();
 }
@@ -215,10 +213,8 @@ std::unique_ptr<Group> DataManager::buildGroup(int groupId) {
                     groupData[groupId]["topic"]
                 );
     } else {
-        std::cout << logPreamble << "No known group of type \""
-                  << groupData[groupId]["type"] << "\", using a default "
-                  << "type instead..." << std::endl;
-        
+        printf("%sNo known group of type \"%s\", using a default type instead.\n",
+                logPreamble.c_str(), type.c_str());
         return std::make_unique<Group>(groupId, name);
     }
 }
@@ -324,8 +320,8 @@ std::unique_ptr<Task> DataManager::buildTask(int groupId, int taskId) {
                     taskFiles[groupId][taskId]["grade"]
                 );
     } else {
-        std::cout << logPreamble << "Unknown task type of \"" << type 
-                  << "\", using a default type instead..." << std::endl;
+        printf("%sUnknown task type of \"%s\", using a default type instead.\n",
+                logPreamble.c_str(), type.c_str());
         return std::make_unique<Task>(taskId, name, date, status);
     }
 }

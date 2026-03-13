@@ -6,6 +6,7 @@
 #include <tuple>
 #include <chrono>
 #include <format>
+#include <cstdio>
 #include <iostream>
 
 
@@ -25,16 +26,13 @@ std::string QueryHelper::queryGroupType() {
     std::string groupType;
     bool validType = false;
     while (!validType) {
-        std::cout << logPreamble << "Enter a group type: ";
+        printf("%sEnter a group type: ", logPreamble.c_str());
         std::getline(std::cin, groupType);
         groupType = translateGroupType(groupType);
         validType = isValidGroupType(groupType);
         if (!validType) {
-            std::cout << logPreamble 
-                      << "Not a valid type, please try again. "
-                      << "If you need to, please see the help menu "
-                      << "for possible group types."
-                      << std::endl;
+            printf("%sInvalid type, please try again. If you need to, please see \
+                    the help menu for possible group types.\n", logPreamble.c_str());
         }
     }
     return groupType;
@@ -48,15 +46,12 @@ std::string QueryHelper::queryGroupName() {
     std::string groupName;
     bool validName = false;
     while (!validName) {
-        std::cout << logPreamble << "Enter a group name: ";
+        printf("%sEnter a group name: ", logPreamble.c_str());
         std::getline(std::cin, groupName);
         validName = isValidGroupName(groupName);
         if (!validName) {
-            std::cout << logPreamble
-                      << "Not a valid name, please try again. "
-                      << "A name must be a non zero string that isn't "
-                      << "already taken as a group name." 
-                      << std::endl;
+            printf("%sInvalid name, please try again. A name must be a non zero string \
+                    that isn't already taken as a group name.\n", logPreamble.c_str());
         }
     }
     return groupName;
@@ -72,21 +67,20 @@ int QueryHelper::queryGroupYear() {
     std::string yearStr;
     bool validYear = false;
     while (!validYear) {
-        std::cout << logPreamble << "Enter a year for the group: ";
+        printf("%sEnter a year for the group: ", logPreamble.c_str());
         std::getline(std::cin, yearStr);
         try {
             groupYear = std::stoi(yearStr);
-        } catch (...) { 
-            std::cerr << logPreamble << "ERROR, couldn't convert "
-                      << "the year into an integer" << std::endl;
+        } catch (...) {
+            printf("%sERROR, couldn't convert the given year into an integer.\n", 
+                    logPreamble.c_str());
             groupYear = 0;
         }
         validYear = isValidGroupYear(groupYear);
         if (!validYear) {
-            std::cout << logPreamble << "Not a valid year, must be "
-                      << "a proper integer representation of a year "
-                      << "within 10 years of the current year." 
-                      << std::endl;
+            printf("%sInvalid year, please try again. A year must be a proper integer \
+                    representation of a year within 10 years of the current year.\n",
+                    logPreamble.c_str());
         }
     }
     return groupYear;
@@ -100,14 +94,13 @@ std::string QueryHelper::queryGroupSemester() {
     std::string semesterStr;
     bool validSemester = false;
     while (!validSemester) {
-        std::cout << logPreamble << "Enter a semester type: ";
+        printf("%sEnter a semester type: ", logPreamble.c_str());
         std::getline(std::cin, semesterStr);
         semesterStr = translateSemester(semesterStr);
         validSemester = isValidSemester(semesterStr);
         if (!validSemester) {
-            std::cout << logPreamble << "Not a valid semester, please "
-                      << "try again. If you need to, please see the help "
-                      << "menu for possible semesters." << std::endl;
+            printf("%sInvalid semester, please try again. If you need to, please the help \
+                    menu for possible semester options.\n", logPreamble.c_str());
         }
     }
     return semesterStr;
@@ -121,14 +114,13 @@ std::string QueryHelper::queryGroupTopic() {
     std::string topicStr;
     bool validTopic = false;
     while (!validTopic) {
-        std::cout << logPreamble << "Enter a topic type: ";
+        printf("%sEnter a topic type: ", logPreamble.c_str());
         std::getline(std::cin, topicStr);
         topicStr = translateTopic(topicStr);
         validTopic = isValidTopic(topicStr);
         if (!validTopic) {
-            std::cout << logPreamble << "Not a valid topic, please "
-                      << "try again. If you need to, please see the help "
-                      << "menu for possible topics." << std::endl;
+            printf("%sInvalid topic, please try again. If you need to, please see the help \
+                    menu for possible topic options.\n", logPreamble.c_str());
         }
     }
     return topicStr;
@@ -143,14 +135,13 @@ std::string QueryHelper::queryGroupTopic() {
 bool QueryHelper::queryRemAllGroups() {
     std::string response;
     while (true) {
-        std::cout << logPreamble << "Are you sure that you want to "
-                  << "remove all groups? (y/n): ";
+        printf("%sAre you sure that you want to remove all groups? (y/n): ", 
+                logPreamble.c_str());
         std::getline(std::cin, response);
         response = translateYesNo(response);
         if (response == "y") return true;
         else if (response == "n") return false;
-        std::cout << logPreamble << "Not a valid response, please "
-                  << "try again." << std::endl;
+        printf("%sInvalid response, please try again.\n", logPreamble.c_str());
     }
 }
 
@@ -163,14 +154,13 @@ bool QueryHelper::queryRemAllGroups() {
 bool QueryHelper::queryRemAllTasks() {
     std::string response;
     while (true) {
-        std::cout << logPreamble << "Are you sure that you want to "
-                  << "remove all tasks? (y/n): ";
+        printf("%sAre you sure that you want to remove all tasks? (y/n): ", 
+                logPreamble.c_str());
         std::getline(std::cin, response);
         response = translateYesNo(response);
         if (response == "y") return true;
         else if (response == "n") return false;
-        std::cout << logPreamble << "Not a valid response, please "
-                  << "try again." << std::endl;
+        printf("%sInvalid response, please try again.\n", logPreamble.c_str());
     }
 }
 
@@ -182,14 +172,13 @@ std::string QueryHelper::queryTaskType() {
     std::string taskType;
     bool validType = false;
     while (!validType) {
-        std::cout << logPreamble << "Enter a task type: ";
+        printf("%sEnter a task type: ", logPreamble.c_str());
         std::getline(std::cin, taskType);
         taskType = translateTaskType(taskType);
         validType = isValidTaskType(taskType);
         if (!validType) {
-            std::cout << logPreamble << "Not a valid type, please try "
-                      << "again. If you need to, please see the help "
-                      << "menu for possible task types." << std::endl;
+            printf("%sInvalid type, please try again. If you need to, please see the \
+                    help menu for possible task types.\n", logPreamble.c_str());
         }
     }
     return taskType;
@@ -203,14 +192,13 @@ std::string QueryHelper::queryTaskName() {
     std::string taskName;
     bool validName = false;
     while (!validName) {
-        std::cout << logPreamble << "Enter a task name: ";
+        printf("%sEnter a task name: ", logPreamble.c_str());
         std::getline(std::cin, taskName);
         validName = isValidTaskName(taskName);
         if (!validName) {
-            std::cout << logPreamble << "Not a valid name, please try "
-                      << "again. A name must be a non zero string that "
-                      << "isn't already taken as a task name in the group." 
-                      << std::endl;
+            printf("%sInvalid name, please try again. A name must be a non zero string \
+                    that isn't already taken as a task name in the group.\n",
+                    logPreamble.c_str());
         }
     }
     return taskName;
@@ -224,13 +212,12 @@ std::string QueryHelper::queryTaskDate() {
     std::string taskDate;
     bool validDate = false;
     while (!validDate) {
-        std::cout << logPreamble << "Enter a task date (MM/DD/YYYY): ";
+        printf("%sEnter a task date (MM/DD/YYYY): ", logPreamble.c_str());
         std::getline(std::cin, taskDate);
         validDate = isValidDate(taskDate);
         if (!validDate) {
-            std::cout << logPreamble << "Not a valid date, please try "
-                      << "again. A date must be formatted as (MM/DD/YYYY)."
-                      << std::endl;
+            printf("%sInvalid date, please try again. A date must be formatted as (MM/DD/YYYY).\n",
+                    logPreamble.c_str());
         }
     }
     return taskDate;
