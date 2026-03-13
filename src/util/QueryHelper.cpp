@@ -366,6 +366,28 @@ bool QueryHelper::isValidDate(const std::string& date) {
 
 /**
  * @brief Checks whether or not a given task date is valid
+ * in relation to the date0 flag.
+ * @param date The given task date in question.
+ * @return A boolean representation of whether or not the
+ * task date in question is valid.
+ */
+bool QueryHelper::isValidTaskDate0(const std::string& date) {
+    int d = std::stoi(date.substr(3, 2));
+    int m = std::stoi(date.substr(0, 2));
+    int y = std::stoi(date.substr(6, 4));
+    std::string today = getTodaysDateStr();
+    int tD = std::stoi(today.substr(3, 2));
+    int tM = std::stoi(today.substr(0, 2));
+    int tY = std::stoi(today.substr(6, 4));
+
+    std::tuple<int, int, int> dateTup  = std::make_tuple(y, m, d);
+    std::tuple<int, int, int> todayTup = std::make_tuple(tY, tM, tD);
+
+    return dateTup >= todayTup;
+}
+
+/**
+ * @brief Checks whether or not a given task date is valid
  * in relation to the date1 flag.
  * @param date The given task date in question.
  * @return A boolean representation of whether or not the

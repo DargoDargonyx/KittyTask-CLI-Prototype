@@ -85,25 +85,37 @@ int main(int argc, char **argv) {
     bool hasFilterListAll = false;
     listTasks->add_flag("-a, --all", hasFilterListAll, 
             "Lists all tasks in every group");
+    bool hasFilterListTaskGrade = false;
+    listTasks->add_flag("-g, --grade", hasFilterListTaskGrade,
+            "Displays the grade information when applicable");
     bool hasFilterListTaskDate = false;
-    listTasks->add_flag("-d,--date", hasFilterListTaskDate,
-            "Only list tasks due the current day and/or in the future");
+    listTasks->add_flag("-d, --date", hasFilterListTaskDate,
+            "Displays the date information");
+    bool hasFilterListTaskDate0 = false;
+    listTasks->add_flag("--date0", hasFilterListTaskDate0,
+            "Only list tasks due the current day and/or in the future \
+            (Displays the date)");
     bool hasFilterListTaskDate1 = false;
     listTasks->add_flag("--date1", hasFilterListTaskDate1,
-            "Only list tasks due within the next 10 days");
+            "Only list tasks due within the next 10 days \
+            (Displays the date)");
     bool hasFilterListTaskDate2 = false;
     listTasks->add_flag("--date2", hasFilterListTaskDate2,
-            "Only list tasks due within the next 30 days");
+            "Only list tasks due within the next 30 days \
+            (Displays the date)");
     bool hasFilterListTaskDate3 = false;
     listTasks->add_flag("--date3", hasFilterListTaskDate3,
-            "Only list tasks due within the next 90 days");
+            "Only list tasks due within the next 90 days \
+            (Displays the date)");
 
     listTasks->callback([&]() {
         cmdHelper->listTasksCommand(
             listTaskGroupName,
             filterListTaskType,
             hasFilterListAll,
+            hasFilterListTaskGrade,
             hasFilterListTaskDate,
+            hasFilterListTaskDate0,
             hasFilterListTaskDate1,
             hasFilterListTaskDate2,
             hasFilterListTaskDate3
@@ -121,7 +133,10 @@ int main(int argc, char **argv) {
     });
 
 
-    CLI::App* removeTask = app.add_subcommand("removeTask", "Remove a task from a group");
+
+    CLI::App* removeTask = app.add_subcommand("removeTask", 
+            "Remove a task from a group");
+
     std::string removeTaskGroupName;
     removeTask->add_option("-G, --group", removeTaskGroupName,
             "A specific group that the task gets removed from")->required();
@@ -149,8 +164,33 @@ int main(int argc, char **argv) {
     });
 
 
+
+    CLI::App* setGrade = app.add_subcommand("setGrade", 
+            "Set the grade for a task if applicable");
+   
+    std::string setGradeGroupName;
+    setGrade->add_option("-G, --group", setGradeGroupName,
+            "The name of the group the task belongs to")->required();
+    std::string setGradeTaskName;
+    setGrade->add_option("-n, --name", setGradeTaskName,
+            "The name of the task")->required();
+    int setGradeValue = -1;
+    setGrade->add_option("-v, --value", setGradeValue,
+            "The numerical value of the grade to be set")->required();
+
+    setGrade->callback([&]() {
+        cmdHelper->setGradeCommand(
+            setGradeGroupName,
+            setGradeTaskName,
+            setGradeValue
+        );
+    });
+
+
+
     CLI::App* countTasks = app.add_subcommand("countTasks", 
             "Get a count of how many tasks are in a group");
+    
     std::string countTasksGroupName;
     countTasks->add_option("-G, --group", countTasksGroupName,
             "A specific group to count the tasks in");
@@ -184,6 +224,7 @@ int main(int argc, char **argv) {
             countTasksDate3Flag
         );
     });
+
 
 
     CLI11_PARSE(app, argc, argv);

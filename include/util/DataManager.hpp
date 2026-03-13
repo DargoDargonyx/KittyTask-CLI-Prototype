@@ -37,16 +37,20 @@ class DataManager {
             const std::string& logPreamble
         );
         void checkDataDirectory();
+        // Groups
         std::vector<std::unique_ptr<Group>> loadGroupData();
-        std::vector<std::unique_ptr<Task>> loadTaskFile(int groupId);
         int getGroupIdFromName(const std::string& groupName);
         void addGroup(std::unique_ptr<Group> newGroup);
         void removeGroup(int groupId);
         void clearAllGroups();
+        bool setGroupGrade(int groupId, int value);
+        // Tasks
+        std::vector<std::unique_ptr<Task>> loadTaskFile(int groupId);
         int getTaskIdFromName(int groupId, const std::string& taskName);
         void addTask(int groupId, std::unique_ptr<Task> newTask);
         void removeTask(int groupId, int taskId);
         void clearAllTasks(int groupId);
+        bool setTaskGrade(int groupId, int taskId, int value);
 };
 
 #endif //DATAMANAGER_H

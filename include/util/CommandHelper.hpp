@@ -37,7 +37,9 @@ class CommandHelper {
             std::string groupName, 
             std::string filterType,
             bool allFlag,
+            bool gradeFlag,
             bool dateFlag,
+            bool date0Flag,
             bool date1Flag,
             bool date2Flag, 
             bool date3Flag
@@ -49,6 +51,11 @@ class CommandHelper {
             std::string filterType,
             bool allFlag,
             bool statusFlag
+        );
+        void setGradeCommand(
+            std::string groupName,
+            std::string taskName,
+            int value
         );
         void countTasksCommand(
             std::string groupName,

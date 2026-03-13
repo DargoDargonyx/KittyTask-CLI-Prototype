@@ -400,6 +400,20 @@ void DataManager::clearAllGroups() {
 }
 
 /**
+ * @brief Handles the logic for changing the grade for a
+ * specific group.
+ * @param groupId The idNum of the group in question.
+ * @param value The grade value to be set.
+ * @return Whether or not the group value was successfully set.
+ */
+bool DataManager::setGroupGrade(int groupId, int value) {
+    std::string groupType = groupData[groupId]["type"];
+    if (groupType != "Class") return false;
+    groupData[groupId]["grade"] = value;
+    return true;
+}
+
+/**
  * @brief Handles the logic for checking whether or not a given
  * group contains a specific task.
  * @param groupId The idNum of the group that the task in
@@ -442,7 +456,6 @@ void DataManager::addTask(int groupId, std::unique_ptr<Task> newTask) {
  * @param taskId The idNum of the task in question.
  */
 void DataManager::removeTask(int groupId, int taskId) {
-    std::string filename = getTaskFilePath(groupId);
     taskFiles[groupId].erase(taskFiles[groupId].begin() + taskId);
     saveTaskFile(groupId);
 }
@@ -453,8 +466,24 @@ void DataManager::removeTask(int groupId, int taskId) {
  * @param groupId The idNum of the group in question.
  */
 void DataManager::clearAllTasks(int groupId) {
-    std::string filename = getTaskFilePath(groupId);
     json empty;
     taskFiles[groupId] = empty;
     saveTaskFile(groupId);
+}
+
+/**
+ * @brief Handles the logic for changing the grade of a 
+ * specific task.
+ * @param groupId The idNum of the group the task in question
+ * belongs to.
+ * @param taskId The idNum of the task in question.
+ * @param value The grade value to be set.
+ * @return Whether or not the task grade was successfully set.
+ */
+bool DataManager::setTaskGrade(int groupId, int taskId, int value) {
+    std::string taskType = taskFiles[groupId][taskId]["type"];
+    if (taskType == "Chore") return false;
+    taskFiles[groupId][taskId]["grade"] = value;
+    saveTaskFile(groupId);
+    return true;
 }

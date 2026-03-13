@@ -40,6 +40,7 @@ class QueryHelper {
         bool isValidSemester(const std::string& semester);
         bool isValidTopic(const std::string& topic);
         bool isValidTaskType(const std::string& taskType);
+        bool isValidTaskDate0(const std::string& date);
         bool isValidTaskDate1(const std::string& date);
         bool isValidTaskDate2(const std::string& date);
         bool isValidTaskDate3(const std::string& date);
