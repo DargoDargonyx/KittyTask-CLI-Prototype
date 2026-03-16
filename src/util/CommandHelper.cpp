@@ -46,6 +46,8 @@ CommandHelper::CommandHelper(const std::string& filepath,
     qHelper = std::make_unique<QueryHelper>(logPreamble);
 }
 
+
+
 /**
  * @brief Handles the logic for the listGroups command.
  * @param filterType The filter type option input.
@@ -135,8 +137,35 @@ void CommandHelper::listGroupsCommand(std::string filterType,
 }
 
 
+
 /**
- * @brief Handles the logic for the addGroupCommand.
+ * @brief Handles the logic for the sortGroups command.
+ * @param dateFlag The date flag.
+ * @param semesterFlag The semester flag.
+ * @param topicFlag The topic flag.
+ */
+void CommandHelper::sortGroupsCommand(bool dateFlag, 
+        bool semesterFlag, bool topicFlag) {
+
+    if (dateFlag) {
+        manager->sortGroupsByDate();
+        printf("%sSorted groups by date.\n", logPreamble.c_str());
+    } else if (semesterFlag) {
+        manager->sortGroupsBySemester();
+        printf("%sSorted groups by semester.\n", logPreamble.c_str());
+    } else if (topicFlag) {
+        manager->sortGroupsByTopic();
+        printf("%sSorted groups by topic.\n", logPreamble.c_str());
+    } else {
+        printf("%sInvalid command, you must specify the method for \
+                sorting the groups.\n", logPreamble.c_str());
+    }
+}
+
+
+
+/**
+ * @brief Handles the logic for the addGroup command.
  */
 void CommandHelper::addGroupCommand() {
     int groupCounter = static_cast<int>(manager->loadGroupData().size());
@@ -182,6 +211,7 @@ void CommandHelper::addGroupCommand() {
     printf("%sSuccessfully added the group \"%s\".\n", 
             logPreamble.c_str(), groupName.c_str());
 }
+
 
 
 /**
@@ -485,6 +515,24 @@ void CommandHelper::listTasksCommand(std::string groupName,
 }
         
 
+
+/**
+ *
+ */
+void CommandHelper::sortTasksCommand(std::string groupName) {
+    int groupId = manager->getGroupIdFromName(groupName);
+    if (groupId == -1) {
+        printf("%sERROR, can't find a group with the name \"%s\". Please try again.\n",
+                logPreamble.c_str(), groupName.c_str());
+        return;
+    }
+    manager->sortTasks(groupId);
+    printf("%sSuccessfully sorted the tasks in the group \"%s\".\n",
+            logPreamble.c_str(), groupName.c_str());
+}
+
+
+
 /**
  * @brief Handles the logic for the assTask command.
  * @param groupName The group name option input.
@@ -553,6 +601,7 @@ void CommandHelper::addTaskCommand(std::string groupName) {
     printf("%sSuccessfully added the task \"%s\" to the group {%s}.\n", 
             logPreamble.c_str(), taskName.c_str(), groupName.c_str());
 }
+
 
 
 /**
@@ -649,6 +698,7 @@ void CommandHelper::removeTaskCommand(std::string groupName, std::string taskNam
 }
 
 
+
 /**
  * @brief Handles the logic for the setGrade command.
  * @param taskName The task name option input.
@@ -700,6 +750,7 @@ void CommandHelper::setGradeCommand(std::string groupName,
     printf("%sSuccessfully set the grade of \"%s\" in the group {%s} to %d.\n",
             logPreamble.c_str(), taskName.c_str(), groupName.c_str(), value);
 }
+
 
 
 /**

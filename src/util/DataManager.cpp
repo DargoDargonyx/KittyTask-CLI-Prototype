@@ -25,6 +25,9 @@
 // Built in libraries
 #include <string>
 #include <vector>
+#include <tuple>
+#include <map>
+#include <algorithm>
 #include <memory>
 #include <filesystem>
 #include <cstdio>
@@ -47,6 +50,8 @@ DataManager::DataManager(const std::string& filepath, const std::string& logPrea
     checkDataDirectory();
 }
 
+
+
 /**
  * @brief A helper function that gets the string representation
  * of the file path to a specific json that holds the task data
@@ -58,6 +63,8 @@ std::string DataManager::getTaskFilePath(int groupId) {
     std::string idStr = std::to_string(groupId);
     return filepath + "tasks/group" + idStr + "_tasks.json";
 }
+
+
 
 /**
  * @brief Ensures that the data directory exists and that it
@@ -110,6 +117,8 @@ void DataManager::checkDataDirectory() {
     }
 }
 
+
+
 /**
  * @brief Loads the data from the json file in the data directory
  * and returns a vector of created Group objects.
@@ -122,6 +131,8 @@ std::vector<std::unique_ptr<Group>> DataManager::loadGroupData() {
     }
     return groups;
 }
+
+
 
 /**
  * @brief Loads the data from the json files in the data/tasks 
@@ -138,6 +149,8 @@ std::vector<std::unique_ptr<Task>> DataManager::loadTaskFile(int groupId) {
     return tasks;
 }
 
+
+
 /**
  * @brief Saves the given group data to the json file in the data directory.
  * @param groups A vector of Group objects to be stored in the json file.
@@ -152,6 +165,8 @@ void DataManager::saveGroupData() {
     }
     file.close();
 }
+
+
 
 /**
  * @brief Saves the given task data to a json associated with the group
@@ -170,6 +185,19 @@ void DataManager::saveTaskFile(int groupId) {
     }
     file.close();
 }
+
+
+
+/**
+ *
+ */
+void DataManager::moveTaskFile(int origGroupId, int newGroupId) {
+    std::swap(taskFiles[origGroupId], taskFiles[newGroupId]);
+    saveTaskFile(origGroupId);
+    saveTaskFile(newGroupId);
+}
+
+
 
 /**
  * @brief Builds a group from json values.
@@ -218,6 +246,8 @@ std::unique_ptr<Group> DataManager::buildGroup(int groupId) {
         return std::make_unique<Group>(groupId, name);
     }
 }
+
+
 
 /**
  * @brief Builds a task from json values.
@@ -326,6 +356,8 @@ std::unique_ptr<Task> DataManager::buildTask(int groupId, int taskId) {
     }
 }
 
+
+
 /**
  * @brief Returns the id number of a group when given the
  * name of the group.
@@ -339,6 +371,138 @@ int DataManager::getGroupIdFromName(const std::string& groupName) {
     return -1;
 }
 
+
+
+/**
+ * @brief Sorts the groups data by date chronologically.
+ */
+void DataManager::sortGroupsByDate() {
+    std::sort(groupData.begin(), groupData.end(),
+            [](const json& a, const json& b) {
+        
+        return a.value("year",0) < b.value("year",0);
+    });
+
+    std::unordered_map<int,int> idMap;
+    for (int i = 0; i < groupData.size(); i++)
+        idMap[groupData[i]["id"]] = i;
+    std::vector<json> newTaskFiles(groupData.size());
+    
+    for (int i = 0; i < groupData.size(); i++) {
+        int oldId = groupData[i]["id"];
+        newTaskFiles[i] = taskFiles[oldId];
+        for (auto& task : newTaskFiles[i])
+            task["groupId"] = i;
+        groupData[i]["id"] = i;
+    }
+
+    taskFiles = newTaskFiles;
+    for (int i = 0; i < taskFiles.size(); i++)
+        saveTaskFile(i);
+
+    saveGroupData();
+}
+   
+
+
+/**
+ * @brief Sorts the groups data by semester chronologically.
+ */
+void DataManager::sortGroupsBySemester() {
+    std::sort(groupData.begin(), groupData.end(),
+            [](const json& a, const json& b) {
+
+        if (!a.contains("semester") || !b.contains("semester"))
+            return false;
+        std::string aS = a["semester"];
+        std::string bS = b["semester"];
+        int aNum;
+        int bNum;
+        
+        if (aS == "Spring") aNum = 0;
+        else if (aS == "Fall") aNum = 1;
+        else aNum = 2;
+        
+        if (bS == "Spring") bNum = 0;
+        else if (bS == "Fall") bNum = 1;
+        else bNum = 2;
+
+        return aNum < bNum;
+    });
+
+    std::unordered_map<int,int> idMap;
+    for (int i = 0; i < groupData.size(); i++)
+        idMap[groupData[i]["id"]] = i;
+    std::vector<json> newTaskFiles(groupData.size());
+    
+    for (int i = 0; i < groupData.size(); i++) {
+        int oldId = groupData[i]["id"];
+        newTaskFiles[i] = taskFiles[oldId];
+        for (auto& task : newTaskFiles[i])
+            task["groupId"] = i;
+        groupData[i]["id"] = i;
+    }
+
+    taskFiles = newTaskFiles;
+    for (int i = 0; i < taskFiles.size(); i++)
+        saveTaskFile(i);
+
+    saveGroupData();
+}
+   
+
+
+/**
+ * @brief Sorts the groups data by topic alphabetically.
+ */
+void DataManager::sortGroupsByTopic() {
+    std::sort(groupData.begin(), groupData.end(),
+            [](const json& a, const json& b) {
+        
+        if (!a.contains("topic") || !b.contains("topic"))
+            return false;
+        std::string aT = a["topic"];
+        std::string bT = b["topic"];
+        int aNum;
+        int bNum;
+
+        if (aT == "Biology") aNum = 0;
+        else if (aT == "Chemistry") aNum = 1;
+        else if (aT == "CS") aNum = 2;
+        else if (aT == "Math") aNum = 3;
+        else aNum = 4;
+
+        if (bT == "Biology") bNum = 0;
+        else if (bT == "Chemistry") bNum = 1;
+        else if (bT == "CS") bNum = 2;
+        else if (bT == "Math") bNum = 3;
+        else bNum = 4;
+
+        return aNum < bNum;
+    });
+
+    std::unordered_map<int,int> idMap;
+    for (int i = 0; i < groupData.size(); i++)
+        idMap[groupData[i]["id"]] = i;
+    std::vector<json> newTaskFiles(groupData.size());
+    
+    for (int i = 0; i < groupData.size(); i++) {
+        int oldId = groupData[i]["id"];
+        newTaskFiles[i] = taskFiles[oldId];
+        for (auto& task : newTaskFiles[i])
+            task["groupId"] = i;
+        groupData[i]["id"] = i;
+    }
+
+    taskFiles = newTaskFiles;
+    for (int i = 0; i < taskFiles.size(); i++)
+        saveTaskFile(i);
+
+    saveGroupData();
+}
+
+
+
 /**
  * @brief Adds a new group to the groupData json file.
  * @param newGroup The new group to be added.
@@ -347,6 +511,7 @@ void DataManager::addGroup(std::unique_ptr<Group> newGroup) {
     int groupId = static_cast<int>(groupData.size());
 
     std::string groupType = newGroup->getType();
+    groupData[groupId]["id"] = groupId;
     groupData[groupId]["name"] = newGroup->getName();
     groupData[groupId]["type"] = groupType;
 
@@ -375,6 +540,8 @@ void DataManager::addGroup(std::unique_ptr<Group> newGroup) {
     saveGroupData();
 }
 
+
+
 /**
  * @brief Handles the logic for removing a group from the 
  * groupData json file.
@@ -387,6 +554,8 @@ void DataManager::removeGroup(int groupId) {
     saveGroupData();
 }
 
+
+
 /**
  * @brief Removes all groups from the groupData json file.
  */
@@ -394,6 +563,8 @@ void DataManager::clearAllGroups() {
     groupData.clear();
     saveGroupData();
 }
+
+
 
 /**
  * @brief Handles the logic for changing the grade for a
@@ -408,6 +579,8 @@ bool DataManager::setGroupGrade(int groupId, int value) {
     groupData[groupId]["grade"] = value;
     return true;
 }
+
+
 
 /**
  * @brief Handles the logic for checking whether or not a given
@@ -425,6 +598,31 @@ int DataManager::getTaskIdFromName(int groupId, const std::string& taskName) {
     return -1;
 }
 
+
+
+void DataManager::sortTasks(int groupId) {
+    json taskFile = taskFiles[groupId];
+    std::sort(taskFile.begin(), taskFile.end(),
+            [](const json& a, const json& b) {
+
+        if (!a.contains("date") || !b.contains("date"))
+            return false;
+
+        std::string da = a["date"];
+        std::string db = b["date"];
+        int ay = std::stoi(da.substr(6,4));
+        int am = std::stoi(da.substr(0,2));
+        int ad = std::stoi(da.substr(3,2));
+        int by = std::stoi(db.substr(6,4));
+        int bm = std::stoi(db.substr(0,2));
+        int bd = std::stoi(db.substr(3,2));
+
+        return std::tie(ay,am,ad) < std::tie(by,bm,bd);
+    }); 
+}
+
+
+
 /**
  * @brief Handles the logic for adding a new task to a given group.
  * @param groupId The idNum of the group in question.
@@ -433,6 +631,8 @@ int DataManager::getTaskIdFromName(int groupId, const std::string& taskName) {
 void DataManager::addTask(int groupId, std::unique_ptr<Task> newTask) {
     int taskId = static_cast<int>(taskFiles[groupId].size());
     std::string taskType = newTask->getType();
+    taskFiles[groupId][taskId]["id"] = taskId;
+    taskFiles[groupId][taskId]["groupId"] = groupId;
     taskFiles[groupId][taskId]["type"] = taskType;
     taskFiles[groupId][taskId]["name"] = newTask->getName();
     taskFiles[groupId][taskId]["date"] = newTask->getDate();
@@ -445,6 +645,8 @@ void DataManager::addTask(int groupId, std::unique_ptr<Task> newTask) {
     saveTaskFile(groupId);
 }
 
+
+
 /**
  * @brief Handles the logic for removing a task in a given group.
  * @param groupId The idNum of the group that the task in
@@ -456,6 +658,8 @@ void DataManager::removeTask(int groupId, int taskId) {
     saveTaskFile(groupId);
 }
 
+
+
 /**
  * @brief Handles the logic for clearing the json task file 
  * for a given group.
@@ -466,6 +670,8 @@ void DataManager::clearAllTasks(int groupId) {
     taskFiles[groupId] = empty;
     saveTaskFile(groupId);
 }
+
+
 
 /**
  * @brief Handles the logic for changing the grade of a 

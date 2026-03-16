@@ -30,6 +30,7 @@ class DataManager {
         std::unique_ptr<Task> buildTask(int groupId, int taskId);
         void saveGroupData();
         void saveTaskFile(int groupId);
+        void moveTaskFile(int origGroupId, int newGroupId);
     public:
         // Constructor
         DataManager(
@@ -40,6 +41,9 @@ class DataManager {
         // Groups
         std::vector<std::unique_ptr<Group>> loadGroupData();
         int getGroupIdFromName(const std::string& groupName);
+        void sortGroupsByDate();
+        void sortGroupsBySemester();
+        void sortGroupsByTopic();
         void addGroup(std::unique_ptr<Group> newGroup);
         void removeGroup(int groupId);
         void clearAllGroups();
@@ -47,6 +51,7 @@ class DataManager {
         // Tasks
         std::vector<std::unique_ptr<Task>> loadTaskFile(int groupId);
         int getTaskIdFromName(int groupId, const std::string& taskName);
+        void sortTasks(int groupId);
         void addTask(int groupId, std::unique_ptr<Task> newTask);
         void removeTask(int groupId, int taskId);
         void clearAllTasks(int groupId);

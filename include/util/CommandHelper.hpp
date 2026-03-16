@@ -24,6 +24,11 @@ class CommandHelper {
             std::string filterSemester, 
             std::string filterTopic
         );
+        void sortGroupsCommand(
+            bool dateFlag,
+            bool semesterFlag,
+            bool topicFlag
+        );
         void addGroupCommand();
         void removeGroupCommand(
             std::string groupName, 
@@ -44,6 +49,7 @@ class CommandHelper {
             bool date2Flag, 
             bool date3Flag
         );
+        void sortTasksCommand(std::string groupName);
         void addTaskCommand(std::string groupName);
         void removeTaskCommand(
             std::string groupName,

@@ -18,6 +18,8 @@
 QueryHelper::QueryHelper(const std::string& logPreamble) 
     : logPreamble(logPreamble) {}
 
+
+
 /**
  * @brief Handles the logic for querying the user for a group type.
  * @return A string representation of the group type in question.
@@ -38,6 +40,8 @@ std::string QueryHelper::queryGroupType() {
     return groupType;
 }
 
+
+
 /**
  * @brief Handles the logic for querying the user for a group name.
  * @return A string representation of the group name in question.
@@ -56,6 +60,8 @@ std::string QueryHelper::queryGroupName() {
     }
     return groupName;
 }
+
+
 
 /**
  * @brief Handles the logic for querying the user for a group year.
@@ -86,6 +92,8 @@ int QueryHelper::queryGroupYear() {
     return groupYear;
 }
 
+
+
 /**
  * @brief Handles the logic for querying the user for a group Semester.
  * @return A string representation of the group Semester in question.
@@ -105,6 +113,8 @@ std::string QueryHelper::queryGroupSemester() {
     }
     return semesterStr;
 }
+
+
 
 /**
  * @brief Handles the logic for querying the user for a group Topic.
@@ -126,6 +136,8 @@ std::string QueryHelper::queryGroupTopic() {
     return topicStr;
 }
 
+
+
 /**
  * @brief Handles the logic for querying the user on whether or not
  * they actually want to remove all groups.
@@ -145,6 +157,8 @@ bool QueryHelper::queryRemAllGroups() {
     }
 }
 
+
+
 /**
  * @brief Handles the logic for querying the user on whether or not
  * they actually want to remove all tasks in a group.
@@ -163,6 +177,8 @@ bool QueryHelper::queryRemAllTasks() {
         printf("%sInvalid response, please try again.\n", logPreamble.c_str());
     }
 }
+
+
 
 /**
  * @brief Handles the logic for querying the user for a task type.
@@ -184,6 +200,8 @@ std::string QueryHelper::queryTaskType() {
     return taskType;
 }
 
+
+
 /**
  * @brief Handles the logic for querying the user for a task name.
  * @return A string representation of the task name in question.
@@ -204,6 +222,8 @@ std::string QueryHelper::queryTaskName() {
     return taskName;
 }
 
+
+
 /**
  * @brief Handles the logic for querying the user for a task date.
  * @return A string representation of the task date in question.
@@ -223,6 +243,8 @@ std::string QueryHelper::queryTaskDate() {
     return taskDate;
 }
 
+
+
 /**
  * @brief Checks whether or not a given group type is valid.
  * @param groupType A string representation of the group
@@ -235,6 +257,8 @@ bool QueryHelper::isValidGroupType(const std::string& groupType) {
         groupType == "Research" || groupType == "SelfStudy";
 }
 
+
+
 /**
  * @brief Checks whether or not a given group name is valid.
  * @param groupName A string representation of the group
@@ -245,6 +269,8 @@ bool QueryHelper::isValidGroupType(const std::string& groupType) {
 bool QueryHelper::isValidGroupName(const std::string& groupName) {
     return groupName.length() > 0;
 }
+
+
 
 /**
  * @brief Checks whether or not a given group year is valid.
@@ -260,6 +286,8 @@ bool QueryHelper::isValidGroupYear(int groupYear) {
         groupYear <= currentYear + 10;
 }
 
+
+
 /**
  * @brief Checks whether or not a given group Semester is valid.
  * @param semester A string representation of the group
@@ -271,6 +299,8 @@ bool QueryHelper::isValidSemester(const std::string& semester) {
     return semester == "Spring" || semester == "Fall" ||
         semester == "Summer";
 }
+
+
 
 /**
  * @brief Checks whether or not a given group Topic is valid.
@@ -284,6 +314,8 @@ bool QueryHelper::isValidTopic(const std::string& topic) {
         topic == "Physics" || topic == "Chemistry" ||
         topic == "Biology";
 }
+
+
 
 /**
  * @brief Checks whether or not a given task type is valid.
@@ -301,6 +333,8 @@ bool QueryHelper::isValidTaskType(const std::string& taskType) {
         taskType == "Reading";
 }
 
+
+
 /**
  * @brief Checks whether or not a given task name is valid.
  * @param taskName A string representation of the task
@@ -311,6 +345,8 @@ bool QueryHelper::isValidTaskType(const std::string& taskType) {
 bool QueryHelper::isValidTaskName(const std::string& taskName) {
     return taskName.length() > 0;
 }
+
+
 
 /**
  * @brief Checks whether or not a given date is valid
@@ -351,6 +387,8 @@ bool QueryHelper::isValidDate(const std::string& date) {
     }
 }
 
+
+
 /**
  * @brief Checks whether or not a given task date is valid
  * in relation to the date0 flag.
@@ -373,6 +411,8 @@ bool QueryHelper::isValidTaskDate0(const std::string& date) {
     return dateTup >= todayTup;
 }
 
+
+
 /**
  * @brief Checks whether or not a given task date is valid
  * in relation to the date1 flag.
@@ -386,6 +426,8 @@ bool QueryHelper::isValidTaskDate1(const std::string& date) {
     std::string expectedDay = addDaysToDate(today, 10);
     return isDateInRange(date, today, expectedDay);
 }
+
+
 
 /**
  * @brief Checks whether or not a given task date is valid
@@ -401,6 +443,8 @@ bool QueryHelper::isValidTaskDate2(const std::string& date) {
     return isDateInRange(date, today, expectedDay);
 }
 
+
+
 /**
  * @brief Checks whether or not a given task date is valid
  * in relation to the date3 flag.
@@ -414,6 +458,8 @@ bool QueryHelper::isValidTaskDate3(const std::string& date) {
     std::string expectedDay = addDaysToDate(today, 90);
     return isDateInRange(date, today, expectedDay);
 }
+
+
 
 /**
  * @brief Translates the given input into a proper group type if one
@@ -444,6 +490,8 @@ std::string QueryHelper::translateGroupType(const std::string& groupType) {
         return groupType;
     }
 }
+
+
 
 /**
  * @brief Translates the given input into a proper task type if one
@@ -501,6 +549,8 @@ std::string QueryHelper::translateTaskType(const std::string& taskType) {
     }
 }
 
+
+
 /**
  * @brief Translates the given input into a proper group Semester 
  * if one is detected.
@@ -517,6 +567,8 @@ std::string QueryHelper::translateSemester(const std::string& semester) {
     else if (lowerStr == "summer") return "Summer";
     else return semester;
 }
+
+
 
 /**
  * @brief Translates the given input into a proper group Topic 
@@ -552,6 +604,8 @@ std::string QueryHelper::translateTopic(const std::string& topic) {
     }
 }
 
+
+
 /**
  * @brief Translates a string into a proper yes or no if available.
  * @param str The string in question.
@@ -564,6 +618,8 @@ std::string QueryHelper::translateYesNo(const std::string& str) {
     else if (lowerStr == "n" || lowerStr == "no") return "n";
     else return str;
 }
+
+
 
 /**
  * @brief Adds a number of days to given date string to help
@@ -597,6 +653,8 @@ std::string QueryHelper::addDaysToDate(const std::string& date, int days) {
     return buildDateStr(d, m, y);
 }
 
+
+
 /**
  * @brief Transforms a set of integers into a date string in order
  * to reduce on repeated code in the class. This string is currently
@@ -610,6 +668,8 @@ std::string QueryHelper::buildDateStr(int day, int month, int year) {
     return std::format("{:02}/{:02}/{:04}", month, day, year);
 }
 
+
+
 /**
  * @brief Gets the current date in a nice formatted string,
  * using the American time format.
@@ -622,6 +682,8 @@ std::string QueryHelper::getTodaysDateStr() {
     return std::format("{:02}/{:02}/{:04}", unsigned(ymd.month()),
             unsigned(ymd.day()), int(ymd.year()));
 }
+
+
 
 /**
  * @brief Checks whether or not a given date is a range between
@@ -653,6 +715,8 @@ bool QueryHelper::isDateInRange(const std::string& date,
 
     return dateTup >= lowerTup && dateTup <= upperTup;
 }
+
+
 
 /**
  * @brief Transforms a given string into all lowercase letters.
