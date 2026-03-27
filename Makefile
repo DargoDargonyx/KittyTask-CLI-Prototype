@@ -1,29 +1,31 @@
 SRC_DIR = src
 INC_DIR = include
-BIN_DIR = bin
+BIN_DIR = build
 
-CXX = g++
-CXXFLAGS = -std=c++20 -I ./$(INC_DIR)
+CC = gcc
+CFLAGS = -Wall -Wextra -g -I ./$(INC_DIR)
 
-SRC = $(wildcard $(SRC_DIR)/*.cpp) \
-	$(wildcard $(SRC_DIR)/groups/*.cpp) \
-	$(wildcard $(SRC_DIR)/tasks/*.cpp) \
-	$(wildcard $(SRC_DIR)/util/*.cpp) 
+SRC = $(wildcard $(SRC_DIR)/*.c) \
+	$(wildcard $(SRC_DIR)/core/*.c) \
+	$(wildcard $(SRC_DIR)/external/*.c) \
+	$(wildcard $(SRC_DIR)/util/*.c) 
 
-OBJ = $(SRC:$(SRC_DIR)/%.cpp=$(BIN_DIR)/%.o)
-TARGET = kitty_task
+OBJ = $(SRC:$(SRC_DIR)/%.c=$(BIN_DIR)/%.o)
+TARGET = ktask
 
 all: $(TARGET)
 
 $(TARGET): $(OBJ)
-	$(CXX) $(OBJ) -o $(TARGET)
+	$(CC) $(OBJ) -o $(TARGET)
 
-$(BIN_DIR)/%.o: $(SRC_DIR)/%.cpp
+$(BIN_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(BIN_DIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(TARGET) $(BIN_DIR)/*.o $(BIN_DIR)/groups/*.o \
-		$(BIN_DIR)/tasks/*.o $(BIN_DIR)/util/*.o
+	rm -f $(TARGET) $(BIN_DIR)/*.o \
+		$(BIN_DIR)/core/*.o \
+		$(BIN_DIR)/external/*.o \
+		$(BIN_DIR)/util/*.o
 
 .PHONY: all clean

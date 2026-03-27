@@ -1,4 +1,4 @@
-bin/
+build/
 data/
 
-kitty_task
+ktask
