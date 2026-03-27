@@ -1,0 +1,121 @@
+[
+  {
+    "file": "src/main.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-c",
+      "src/main.c",
+      "-o",
+      "build/main.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/main.o"
+  },
+  {
+    "file": "src/core/group.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-c",
+      "src/core/group.c",
+      "-o",
+      "build/core/group.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/core/group.o"
+  },
+  {
+    "file": "src/core/task.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-c",
+      "src/core/task.c",
+      "-o",
+      "build/core/task.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/core/task.o"
+  },
+  {
+    "file": "src/util/chrono.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-c",
+      "src/util/chrono.c",
+      "-o",
+      "build/util/chrono.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/util/chrono.o"
+  },
+  {
+    "file": "src/util/config.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-c",
+      "src/util/config.c",
+      "-o",
+      "build/util/config.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/util/config.o"
+  },
+  {
+    "file": "src/util/data.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-c",
+      "src/util/data.c",
+      "-o",
+      "build/util/data.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/util/data.o"
+  },
+  {
+    "file": "src/util/error.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-c",
+      "src/util/error.c",
+      "-o",
+      "build/util/error.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/util/error.o"
+  }
+]
