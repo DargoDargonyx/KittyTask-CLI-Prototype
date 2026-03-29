@@ -35,7 +35,7 @@
 typedef struct Group Group;
 struct Group {
     void (*destroy)(Group* self);
-    char* name;
+    const char* name;
     int type;
     int taskCap;
     int taskCount;
