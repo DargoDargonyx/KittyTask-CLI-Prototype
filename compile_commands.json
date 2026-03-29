@@ -1,0 +1,282 @@
+[
+  {
+    "file": "src/main.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-O2",
+      "-DSQLITE_THREADSAFE=0",
+      "-DSQLITE_OMIT_LOAD_EXTENSION",
+      "-c",
+      "src/main.c",
+      "-o",
+      "build/main.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/main.o"
+  },
+  {
+    "file": "src/core/cli.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-O2",
+      "-DSQLITE_THREADSAFE=0",
+      "-DSQLITE_OMIT_LOAD_EXTENSION",
+      "-c",
+      "src/core/cli.c",
+      "-o",
+      "build/core/cli.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/core/cli.o"
+  },
+  {
+    "file": "src/core/command.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-O2",
+      "-DSQLITE_THREADSAFE=0",
+      "-DSQLITE_OMIT_LOAD_EXTENSION",
+      "-c",
+      "src/core/command.c",
+      "-o",
+      "build/core/command.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/core/command.o"
+  },
+  {
+    "file": "src/core/group.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-O2",
+      "-DSQLITE_THREADSAFE=0",
+      "-DSQLITE_OMIT_LOAD_EXTENSION",
+      "-c",
+      "src/core/group.c",
+      "-o",
+      "build/core/group.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/core/group.o"
+  },
+  {
+    "file": "src/core/interactive.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-O2",
+      "-DSQLITE_THREADSAFE=0",
+      "-DSQLITE_OMIT_LOAD_EXTENSION",
+      "-c",
+      "src/core/interactive.c",
+      "-o",
+      "build/core/interactive.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/core/interactive.o"
+  },
+  {
+    "file": "src/core/query.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-O2",
+      "-DSQLITE_THREADSAFE=0",
+      "-DSQLITE_OMIT_LOAD_EXTENSION",
+      "-c",
+      "src/core/query.c",
+      "-o",
+      "build/core/query.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/core/query.o"
+  },
+  {
+    "file": "src/core/task.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-O2",
+      "-DSQLITE_THREADSAFE=0",
+      "-DSQLITE_OMIT_LOAD_EXTENSION",
+      "-c",
+      "src/core/task.c",
+      "-o",
+      "build/core/task.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/core/task.o"
+  },
+  {
+    "file": "src/external/cJSON.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-O2",
+      "-DSQLITE_THREADSAFE=0",
+      "-DSQLITE_OMIT_LOAD_EXTENSION",
+      "-c",
+      "src/external/cJSON.c",
+      "-o",
+      "build/external/cJSON.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/external/cJSON.o"
+  },
+  {
+    "file": "src/external/sqlite3.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-O2",
+      "-DSQLITE_THREADSAFE=0",
+      "-DSQLITE_OMIT_LOAD_EXTENSION",
+      "-c",
+      "src/external/sqlite3.c",
+      "-o",
+      "build/external/sqlite3.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/external/sqlite3.o"
+  },
+  {
+    "file": "src/util/chrono.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-O2",
+      "-DSQLITE_THREADSAFE=0",
+      "-DSQLITE_OMIT_LOAD_EXTENSION",
+      "-c",
+      "src/util/chrono.c",
+      "-o",
+      "build/util/chrono.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/util/chrono.o"
+  },
+  {
+    "file": "src/util/color.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-O2",
+      "-DSQLITE_THREADSAFE=0",
+      "-DSQLITE_OMIT_LOAD_EXTENSION",
+      "-c",
+      "src/util/color.c",
+      "-o",
+      "build/util/color.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/util/color.o"
+  },
+  {
+    "file": "src/util/config.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-O2",
+      "-DSQLITE_THREADSAFE=0",
+      "-DSQLITE_OMIT_LOAD_EXTENSION",
+      "-c",
+      "src/util/config.c",
+      "-o",
+      "build/util/config.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/util/config.o"
+  },
+  {
+    "file": "src/util/data.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-O2",
+      "-DSQLITE_THREADSAFE=0",
+      "-DSQLITE_OMIT_LOAD_EXTENSION",
+      "-c",
+      "src/util/data.c",
+      "-o",
+      "build/util/data.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/util/data.o"
+  },
+  {
+    "file": "src/util/error.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-O2",
+      "-DSQLITE_THREADSAFE=0",
+      "-DSQLITE_OMIT_LOAD_EXTENSION",
+      "-c",
+      "src/util/error.c",
+      "-o",
+      "build/util/error.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/util/error.o"
+  }
+]

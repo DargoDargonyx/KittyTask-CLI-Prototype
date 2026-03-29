@@ -1,29 +1,31 @@
-SRC_DIR = src
-INC_DIR = include
-BIN_DIR = bin
+SRC_DIR := src
+INC_DIR := include
+BIN_DIR := build
 
-CXX = g++
-CXXFLAGS = -std=c++20 -I ./$(INC_DIR)
+CC := gcc
+CFLAGS := -Wall -Wextra -g -I ./$(INC_DIR)
+SQL_FLAGS := -O2 -DSQLITE_THREADSAFE=0 -DSQLITE_OMIT_LOAD_EXTENSION
 
-SRC = $(wildcard $(SRC_DIR)/*.cpp) \
-	$(wildcard $(SRC_DIR)/groups/*.cpp) \
-	$(wildcard $(SRC_DIR)/tasks/*.cpp) \
-	$(wildcard $(SRC_DIR)/util/*.cpp) 
+SRC := $(wildcard $(SRC_DIR)/*.c) \
+	$(wildcard $(SRC_DIR)/core/*.c) \
+	$(wildcard $(SRC_DIR)/external/*.c) \
+	$(wildcard $(SRC_DIR)/util/*.c) 
 
-OBJ = $(SRC:$(SRC_DIR)/%.cpp=$(BIN_DIR)/%.o)
-TARGET = kitty_task
+OBJ := $(patsubst $(SRC_DIR)/%.c,$(BIN_DIR)/%.o,$(SRC))
+
+TARGET := ktask
+
 
 all: $(TARGET)
 
 $(TARGET): $(OBJ)
-	$(CXX) $(OBJ) -o $(TARGET)
+	$(CC) $(OBJ) -o $(TARGET)
 
-$(BIN_DIR)/%.o: $(SRC_DIR)/%.cpp
-	@mkdir -p $(BIN_DIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+$(BIN_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(SQL_FLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(TARGET) $(BIN_DIR)/*.o $(BIN_DIR)/groups/*.o \
-		$(BIN_DIR)/tasks/*.o $(BIN_DIR)/util/*.o
+	rm -rf $(TARGET) $(BIN_DIR)
 
 .PHONY: all clean
