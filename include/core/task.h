@@ -64,6 +64,8 @@ typedef struct {
     int grade;
 } PresentationTask;
 
+Error destroyTask(Task* self);
+
 AttendanceTask* createAttendanceTask(const char* n, Date d);
 Error destroyAttendanceTask(Task* self);
 

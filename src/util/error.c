@@ -111,6 +111,18 @@ char* getErrorStatusDesc(Error* err) {
 		case ESTAT_GROUP_DESTROY:
 			sprintf(str, "Group Destruction Error");
 			break;
+		case ESTAT_GROUP_CONTAINER_CREATE:
+			sprintf(str, "Group Container Creation Error");
+			break;
+		case ESTAT_GROUP_CONTAINER_DESTROY:
+			sprintf(str, "Group Container Destruction Error");
+			break;
+		case ESTAT_GROUP_ADD_TASK:
+			sprintf(str, "Group Task Addition Error");
+			break;
+		case ESTAT_GROUP_CONTAINER_ADD_GROUP:
+			sprintf(str, "Group Container Group Addition Error");
+			break;
 		// data
 		case ESTAT_DATA_LOAD:
 			sprintf(str, "Database Loading Error");

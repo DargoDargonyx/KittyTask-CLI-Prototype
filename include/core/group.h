@@ -8,6 +8,7 @@
 #ifndef GROUP_H
 #define GROUP_H
 
+#define INIT_GROUP_CAP 31
 #define INIT_TASK_CAP 31
 
 // types
@@ -65,6 +66,14 @@ typedef struct {
     int year;
 } ResearchGroup;
 
+typedef struct {
+	int groupCap;
+	int groupCount;
+	Group** groups;
+} GroupContainer;
+
+Error destroyGroup(Group* self);
+
 ClassGroup* createClassGroup(const char* n, int sem, int top, int y);
 Error destroyClassGroup(Group* self);
 
@@ -73,5 +82,11 @@ Error destroyDevGroup(Group* self);
 
 ResearchGroup* createResearchGroup(const char* n, int top, int y);
 Error destroyResearchGroup(Group* self);
+
+GroupContainer* createGroupContainer();
+Error destroyGroupContainer(GroupContainer* self);
+
+Error addTask(Group* group, Task* task);
+Error addGroup(GroupContainer* container, Group* group);
 
 #endif

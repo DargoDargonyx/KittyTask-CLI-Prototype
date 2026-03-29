@@ -11,6 +11,19 @@
 
 /**
  * @author DargoDargonyx
+ * @date 03/29/26
+ * @brief Handles the logic for destroying any Task struct.
+ *
+ * @param self : Task struct pointer
+ * @return An Error struct that describes whether or not the
+ * Task struct was able to successfully be destroyed
+ */
+Error destroyTask(Task* self) {
+	return self->destroy(self);
+}
+
+/**
+ * @author DargoDargonyx
  * @date 03/29/2026
  * @brief Handles the logic for creating an AttendanceTask struct.
  *
