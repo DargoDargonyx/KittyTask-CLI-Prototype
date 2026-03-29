@@ -1,12 +1,14 @@
 /**
  * @file group.h
  * @author DargoDargonyx
- * @date 03/27/2026
+ * @date 03/29/2026
  * @brief Handles the logic for handling groups.
  */
 
 #ifndef GROUP_H
 #define GROUP_H
+
+#define INIT_TASK_CAP 31
 
 // types
 #define G_TYPE_COUNT 3
@@ -31,10 +33,11 @@
 #define TOP_PHY 4
 
 #include "core/task.h"
+#include "util/error.h"
 
 typedef struct Group Group;
 struct Group {
-    void (*destroy)(Group* self);
+    Error (*destroy)(Group* self);
     const char* name;
     int type;
     int taskCap;
@@ -63,12 +66,12 @@ typedef struct {
 } ResearchGroup;
 
 ClassGroup* createClassGroup(const char* n, int sem, int top, int y);
-void destroyClassGroup(Group* self);
+Error destroyClassGroup(Group* self);
 
 DevGroup* createDevGroup(const char* n, int top, int y);
-void destroyDevGroup(Group* self);
+Error destroyDevGroup(Group* self);
 
 ResearchGroup* createResearchGroup(const char* n, int top, int y);
-void destroyResearchGroup(Group* self);
+Error destroyResearchGroup(Group* self);
 
 #endif

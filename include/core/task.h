@@ -1,7 +1,7 @@
 /**
  * @file task.h
  * @author DargoDargonyx
- * @date 03/28/2026
+ * @date 03/29/2026
  * @brief Handles the logic for handling tasks.
  */
 
@@ -20,10 +20,11 @@
 #define T_TYPE_PRESENTATION 7
 
 #include "util/chrono.h"
+#include "util/error.h"
 
 typedef struct Task Task;
 struct Task {
-    void (*destroy)(Task* self);
+    Error (*destroy)(Task* self);
     Date dueDate;
     const char* name;
     int type;
@@ -64,24 +65,24 @@ typedef struct {
 } PresentationTask;
 
 AttendanceTask* createAttendanceTask(const char* n, Date d);
-void destroyAttendanceTask(Task* self);
+Error destroyAttendanceTask(Task* self);
 
 ChoreTask* createChoreTask(const char* n, Date d);
-void destroyChoreTask(Task* self);
+Error destroyChoreTask(Task* self);
 
 ExamTask* createExamTask(const char* n, Date d);
-void destroyExamTask(Task* self);
+Error destroyExamTask(Task* self);
 
 HomeworkTask* createHomeworkTask(const char* n, Date d);
-void destroyHomeworkTask(Task* self);
+Error destroyHomeworkTask(Task* self);
 
 QuizTask* createQuizTask(const char* n, Date d);
-void destroyQuizTask(Task* self);
+Error destroyQuizTask(Task* self);
 
 ReadingTask* createReadingTask(const char* n, Date d);
-void destroyReadingTask(Task* self);
+Error destroyReadingTask(Task* self);
 
 PresentationTask* createPresentationTask(const char* n, Date d);
-void destroyPresentationTask(Task* self);
+Error destroyPresentationTask(Task* self);
 
 #endif

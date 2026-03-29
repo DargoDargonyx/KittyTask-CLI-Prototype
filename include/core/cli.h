@@ -1,7 +1,7 @@
 /**
  * @file cli.h
  * @author DargoDargonyx
- * @date 03/28/2026
+ * @date 03/29/2026
  * @brief Handles the logic for command-line interfacing.
  */
 
@@ -61,27 +61,27 @@ typedef struct {
 } CLI_CMD;
 
 typedef struct {
-    int cmdCount;
     int cmdCap;
+    int cmdCount;
     CLI_CMD** cmds;
-    int errCount;
     int errCap;
+    int errCount;
     Error* errs;
 } CLI_CMDTracker;
 
 CLI_Flag* CLI_createFlag(const char* n, char m);
-void CLI_destroyFlag(CLI_Flag* self);
+Error CLI_destroyFlag(CLI_Flag* self);
 
 CLI_Opt* CLI_createOpt(const char* n, char m, const char* em);
-void CLI_destroyOpt(CLI_Opt* self);
+Error CLI_destroyOpt(CLI_Opt* self);
 
-void CLI_createCommand(CLI_CMDTracker* tracker, const char* n, const char* d,
-                       int fc, CLI_Flag** f, int oc, CLI_Opt** o);
-void CLI_destroyCommand(CLI_CMD* self);
+Error CLI_createCommand(CLI_CMDTracker* tracker, const char* n, 
+		const char* d, int fc, CLI_Flag** f, int oc, CLI_Opt** o);
+Error CLI_destroyCommand(CLI_CMD* self);
 
 CLI_CMDTracker CLI_createCommandTracker();
-void CLI_destroyCommandTracker(CLI_CMDTracker* self);
-void CLI_addCommand(CLI_CMDTracker* tracker, CLI_CMD* cmd);
-void CLI_addError(CLI_CMDTracker* tracker, Error err);
+Error CLI_destroyCommandTracker(CLI_CMDTracker* self);
+Error CLI_addCommand(CLI_CMDTracker* tracker, CLI_CMD* cmd);
+Error CLI_addError(CLI_CMDTracker* tracker, Error err);
 
 #endif
