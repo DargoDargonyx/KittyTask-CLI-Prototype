@@ -16,7 +16,7 @@
  * @date 03/28/2026
  * @brief Handles the logic for creating a ClassGroup struct.
  *
- * @param n : string pointer
+ * @param n : c-style string
  * @param sem : integer
  * @param topic : integer
  * @param y : integer
@@ -60,7 +60,7 @@ void destroyClassGroup(Group* self) {
  * @date 03/28/2026
  * @brief Handles the logic for creating a DevGroup struct.
  *
- * @param n : string pointer
+ * @param n : c-style string
  * @param sem : integer
  * @param y : integer
  * @return A pointer to the DevGroup struct
@@ -101,7 +101,7 @@ void destroyDevGroup(Group* self) {
  * @date 03/28/2026
  * @brief Handles the logic for creating a ResearchGroup struct.
  *
- * @param n : string pointer
+ * @param n : c-style string
  * @param topic : integer
  * @param y : integer
  * @return A pointer to the ResearchGroup struct

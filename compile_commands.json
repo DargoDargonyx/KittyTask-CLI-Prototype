@@ -200,6 +200,26 @@
     "output": "build/util/chrono.o"
   },
   {
+    "file": "src/util/color.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-O2",
+      "-DSQLITE_THREADSAFE=0",
+      "-DSQLITE_OMIT_LOAD_EXTENSION",
+      "-c",
+      "src/util/color.c",
+      "-o",
+      "build/util/color.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/util/color.o"
+  },
+  {
     "file": "src/util/config.c",
     "arguments": [
       "gcc",

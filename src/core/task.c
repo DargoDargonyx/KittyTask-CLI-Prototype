@@ -14,7 +14,7 @@
  * @date 03/28/2026
  * @brief Handles the logic for creating an AttendanceTask struct.
  *
- * @param n : string pointer
+ * @param n : c-style string
  * @param d : Date struct
  * @return A pointer to the AttendanceTask struct
  */
@@ -37,7 +37,7 @@ void destroyAttendanceTask(Task* self) { free(self); }
  * @date 03/28/2026
  * @brief Handles the logic for creating a ChoreTask struct.
  *
- * @param n : string pointer
+ * @param n : c-style string
  * @param d : Date struct
  * @return A pointer to the ChoreTask struct
  */
@@ -66,7 +66,7 @@ void destroyChoreTask(Task* self) { free(self); }
  * @date 03/28/2026
  * @brief Handles the logic for creating an ExamTask struct.
  *
- * @param n : string pointer
+ * @param n : c-style string
  * @param d : Date struct
  * @return A pointer to the ExamTask struct
  */
@@ -96,7 +96,7 @@ void destroyExamTask(Task* self) { free(self); }
  * @date 03/28/2026
  * @brief Handles the logic for creating a HomeworkTask struct.
  *
- * @param n : string pointer
+ * @param n : c-style string
  * @param d : Date struct
  * @return A pointer to the HomeworkTask struct
  */
@@ -126,7 +126,7 @@ void destroyHomeworkTask(Task* self) { free(self); }
  * @date 03/28/2026
  * @brief Handles the logic for creating a QuizTask struct.
  *
- * @param n : string pointer
+ * @param n : c-style string
  * @param d : Date struct
  * @return A pointer to the QuizTask struct
  */
@@ -156,7 +156,7 @@ void destroyQuizTask(Task* self) { free(self); }
  * @date 03/28/2026
  * @brief Handles the logic for creating a ReadingTask struct.
  *
- * @param n : string pointer
+ * @param n : c-style string
  * @param d : Date struct
  * @return A pointer to the ReadingTask struct
  */
@@ -186,7 +186,7 @@ void destroyReadingTask(Task* self) { free(self); }
  * @date 03/28/2026
  * @brief Handles the logic for creating a PresentationTask struct.
  *
- * @param n : string pointer
+ * @param n : c-style string
  * @param d : Date struct
  * @return A pointer to the PresentationTask struct
  */

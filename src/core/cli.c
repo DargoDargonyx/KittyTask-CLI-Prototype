@@ -30,7 +30,7 @@ CLI_Int CLI_createInt(int val) {
  * @date 03/28/2026
  * @brief Handles the logic for creating a CLI_Str struct.
  *
- * @param val : string pointer
+ * @param val : c-style string
  * @return The CLI_Str struct
  */
 CLI_Str CLI_createStr(const char* val) {
@@ -45,7 +45,7 @@ CLI_Str CLI_createStr(const char* val) {
  * @date 03/28/2026
  * @brief Handles the logic for creating a CLI_Flag struct.
  *
- * @param n : string pointer
+ * @param n : c-style string
  * @param m : char
  * @return A pointer to the CLI_Flag struct
  */
@@ -72,9 +72,9 @@ void CLI_destroyFlag(CLI_Flag* self) { free(self); }
  * @date 03/28/2026
  * @brief Handles the logic for creating a CLI_Opt struct.
  *
- * @param n : string pointer
+ * @param n : c-style string
  * @param m : char
- * @param em : string pointer
+ * @param em : c-style string
  * @return A pointer to the CLI_Opt struct
  */
 CLI_Opt* CLI_createOpt(const char* n, char m, const char* em) {
@@ -102,8 +102,8 @@ void CLI_destroyOpt(CLI_Opt* self) { free(self); }
  * @brief Handles the logic for creating a CLI_CMD struct.
  *
  * @param tracker : CLI_CMDTracker struct pointer
- * @param n : string pointer
- * @param d : string pointer
+ * @param n : c-style string
+ * @param d : c-style string
  * @param fc : integer
  * @param f : c-style array of CLI_Flag structs
  * @param oc : integer

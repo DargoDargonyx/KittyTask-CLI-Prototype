@@ -9,4 +9,8 @@
 #ifndef INTERACTIVE_H
 #define INTERACTIVE_H
 
+#include "util/error.h"
+
+Error startInteractiveLoop(const char* preamble);
+
 #endif

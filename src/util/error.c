@@ -15,7 +15,7 @@
  * @brief Creates a new Error strcut.
  *
  * @param statusNum : integer
- * @param msg : string pointer
+ * @param msg : c-style string
  * @return The new Error struct
  */
 Error createError(int statusNum, const char* msg) {
