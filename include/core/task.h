@@ -1,7 +1,7 @@
 /**
  * @file task.h
  * @author DargoDargonyx
- * @date 03/27/2026
+ * @date 03/28/2026
  * @brief Handles the logic for handling tasks.
  */
 
@@ -24,43 +24,64 @@
 typedef struct Task Task;
 struct Task {
     void (*destroy)(Task* self);
+    Date dueDate;
     const char* name;
     int type;
-    Date dueDate;
 };
 
 typedef struct {
     Task base;
     int grade;
-} Attendance;
+} AttendanceTask;
 
 typedef struct {
     Task base;
-} Chore;
-
-typedef struct {
-    Task base;
-    int grade;
-} Exam;
+} ChoreTask;
 
 typedef struct {
     Task base;
     int grade;
-} Homework;
+} ExamTask;
 
 typedef struct {
     Task base;
     int grade;
-} Quiz;
+} HomeworkTask;
 
 typedef struct {
     Task base;
     int grade;
-} Reading;
+} QuizTask;
 
 typedef struct {
     Task base;
     int grade;
-} Presentation;
+} ReadingTask;
+
+typedef struct {
+    Task base;
+    int grade;
+} PresentationTask;
+
+AttendanceTask* createAttendanceTask(const char* n, Date d);
+void destroyAttendanceTask(Task* self);
+
+ChoreTask* createChoreTask(const char* n, Date d);
+void destroyChoreTask(Task* self);
+
+ExamTask* createExamTask(const char* n, Date d);
+void destroyExamTask(Task* self);
+
+HomeworkTask* createHomeworkTask(const char* n, Date d);
+void destroyHomeworkTask(Task* self);
+
+QuizTask* createQuizTask(const char* n, Date d);
+void destroyQuizTask(Task* self);
+
+ReadingTask* createReadingTask(const char* n, Date d);
+void destroyReadingTask(Task* self);
+
+PresentationTask* createPresentationTask(const char* n, Date d);
+void destroyPresentationTask(Task* self);
 
 #endif
