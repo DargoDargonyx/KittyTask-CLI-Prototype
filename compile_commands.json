@@ -40,6 +40,26 @@
     "output": "build/core/cli.o"
   },
   {
+    "file": "src/core/command.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-O2",
+      "-DSQLITE_THREADSAFE=0",
+      "-DSQLITE_OMIT_LOAD_EXTENSION",
+      "-c",
+      "src/core/command.c",
+      "-o",
+      "build/core/command.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/core/command.o"
+  },
+  {
     "file": "src/core/group.c",
     "arguments": [
       "gcc",
@@ -58,6 +78,26 @@
     ],
     "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
     "output": "build/core/group.o"
+  },
+  {
+    "file": "src/core/interactive.c",
+    "arguments": [
+      "gcc",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-I",
+      "./include",
+      "-O2",
+      "-DSQLITE_THREADSAFE=0",
+      "-DSQLITE_OMIT_LOAD_EXTENSION",
+      "-c",
+      "src/core/interactive.c",
+      "-o",
+      "build/core/interactive.o"
+    ],
+    "directory": "/home/dargo/DevWork/KittySeries/KittyTask-CLI",
+    "output": "build/core/interactive.o"
   },
   {
     "file": "src/core/query.c",
